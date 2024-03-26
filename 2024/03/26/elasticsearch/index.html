@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>elasticsearch简介 | Monster龙</title><meta name="author" content="CXL"><meta name="copyright" content="CXL"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Elasticsearch是一个近乎实时（NRT）的搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。通常有集群，节点，分片，副本等概念。 集群(cluster)集群(cluster)是一组具有相同cluster.name的节点集合，他们协同工作，共享数据并提供故障转移和扩展功能，当然一个节点也可以组成一个集群。 集群由唯一名称标识，默认情况下为“elasticsearch”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elasticsearch简介">
+<meta property="og:url" content="http://cube295.eu.org/2024/03/26/elasticsearch/index.html">
+<meta property="og:site_name" content="Monster龙">
+<meta property="og:description" content="Elasticsearch是一个近乎实时（NRT）的搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。通常有集群，节点，分片，副本等概念。 集群(cluster)集群(cluster)是一组具有相同cluster.name的节点集合，他们协同工作，共享数据并提供故障转移和扩展功能，当然一个节点也可以组成一个集群。 集群由唯一名称标识，默认情况下为“elasticsearch”">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cube295.eu.org/img/avatar.jpg">
+<meta property="article:published_time" content="2024-03-26T15:18:41.000Z">
+<meta property="article:modified_time" content="2024-03-26T15:22:13.239Z">
+<meta property="article:author" content="CXL">
+<meta property="article:tag" content="es">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cube295.eu.org/img/avatar.jpg"><link rel="shortcut icon" href="/img/title.jpg"><link rel="canonical" href="http://cube295.eu.org/2024/03/26/elasticsearch/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'elasticsearch简介',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-26 23:22:13'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Monster龙"><img class="site-icon" src="/img/title.jpg"/><span class="site-name">Monster龙</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">elasticsearch简介</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-26T15:22:13.239Z" title="更新于 2024-03-26 23:22:13">2024-03-26</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><code>Elasticsearch是一个近乎实时（NRT）的搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。通常有集群，节点，分片，副本等概念。</code></p>
+<h3 id="集群-cluster"><a href="#集群-cluster" class="headerlink" title="集群(cluster)"></a>集群(cluster)</h3><p>集群(cluster)是一组具有相同<code>cluster.name</code>的节点集合，他们协同工作，共享数据并提供故障转移和扩展功能，当然一个节点也可以组成一个集群。</p>
+<p>集群由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入集群的话，则该节点只能是集群的一部分。</p>
+<p><strong>【集群健康状态】</strong></p>
+<blockquote>
+<p>集群状态通过 <strong>绿</strong>，<strong>黄</strong>，<strong>红</strong> 来标识</p>
+<ul>
+<li><strong>绿色</strong> - 一切都很好（集群功能齐全）。</li>
+<li><strong>黄色</strong> - 所有数据均可用，但尚未分配一些副本（集群功能齐全）。</li>
+<li><strong>红色</strong> - 某些数据由于某种原因不可用（集群部分功能）</li>
+</ul>
+</blockquote>
+<p>要检查群集运行状况，我们可以在 Kibana 控制台中运行以下命令<code>GET /_cluster/health</code>，得到如下信息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;cluster_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;elasticsearch&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;yellow&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;timed_out&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_nodes&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_data_nodes&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_primary_shards&quot;</span><span class="punctuation">:</span> <span class="number">28</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_shards&quot;</span><span class="punctuation">:</span> <span class="number">28</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;relocating_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;initializing_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unassigned_shards&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;delayed_unassigned_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_pending_tasks&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_in_flight_fetch&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;task_max_waiting_in_queue_millis&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_shards_percent_as_number&quot;</span><span class="punctuation">:</span> <span class="number">84.84848484848484</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="节点-Node"><a href="#节点-Node" class="headerlink" title="节点(Node)"></a>节点(Node)</h2><p>节点，一个运行的 ES 实例就是一个节点，节点存储数据并参与集群的索引和搜索功能。</p>
+<p>就像集群一样，节点由名称标识，默认情况下，该名称是在启动时分配给节点的随机通用唯一标识符（UUID）。如果不需要默认值，可以定义所需的任何节点名称。此名称对于管理目的非常重要，您可以在其中识别网络中哪些服务器与 Elasticsearch 集群中的哪些节点相对应。</p>
+<p>可以将节点配置为按集群名称加入特定集群。默认情况下，每个节点都设置为加入一个名为 cluster 的 elasticsearch 集群，这意味着如果您在网络上启动了许多节点并且假设它们可以相互发现 - 它们将自动形成并加入一个名为 elasticsearch 的集群。</p>
+<h2 id="索引（Index）"><a href="#索引（Index）" class="headerlink" title="索引（Index）"></a>索引（Index）</h2><p>索引是具有某些类似特征的文档集合。例如，您可以拥有店铺数据的索引，商品的一个索引以及订单数据的一个索引。</p>
+<p>索引由名称标识（必须全部小写），此名称用于在对其中的文档执行索引，搜索，更新和删除操作时引用索引。</p>
+<h2 id="类型（Type）"><a href="#类型（Type）" class="headerlink" title="类型（Type）"></a>类型（Type）</h2><p>类型，曾经是索引的逻辑类别&#x2F;分区，允许您在同一索引中存储不同类型的文档，例如，一种类型用于用户，另一种类型用于博客帖子。</p>
+<blockquote>
+<p><strong>在 6.0.0 中弃用，以后将不再可能在索引中创建多个类型，并且将在更高版本中删除类型的整个概念</strong>。</p>
+</blockquote>
+<h2 id="文档（Document）"><a href="#文档（Document）" class="headerlink" title="文档（Document）"></a>文档（Document）</h2><p>文档是可以建立索引的基本信息单元。例如，您可以为单个客户提供文档，为单个产品提供一个文档，为单个订单提供一个文档。该文档以JSON（JavaScript Object Notation）表示，JSON是一种普遍存在的互联网数据交换格式。</p>
+<p>在索引&#x2F;类型中，您可以根据需要存储任意数量的文档。请注意，尽管文档实际上驻留在索引中，但实际上必须将文档编入索引&#x2F;分配给索引中的类型。</p>
+<h2 id="分片-Shards"><a href="#分片-Shards" class="headerlink" title="分片(Shards)"></a>分片(Shards)</h2><p>索引可能存储大量可能超过单个节点的硬件限制的数据。例如，占用1TB磁盘空间的十亿个文档的单个索引可能不适合单个节点的磁盘，或者可能太慢而无法单独从单个节点提供搜索请求。</p>
+<p>为了解决这个问题，Elasticsearch 提供了将索引细分为多个称为分片的功能。创建索引时，只需定义所需的分片数即可。每个分片本身都是一个功能齐全且独立的“索引”，可以托管在集群中的任何节点上。</p>
+<p>设置分片的目的及原因主要是：</p>
+<ul>
+<li>它允许您水平拆分&#x2F;缩放内容量</li>
+<li>它允许您跨分片（可能在多个节点上）分布和并行化操作，从而提高性能&#x2F;吞吐量</li>
+</ul>
+<p>分片的分布方式以及如何将其文档聚合回搜索请求的机制完全由 Elasticsearch 管理，对用户而言是透明的。</p>
+<p>在可能随时发生故障的网络&#x2F;云环境中，分片非常有用，建议使用故障转移机制，以防分片&#x2F;节点以某种方式脱机或因任何原因消失。为此，Elasticsearch 允许您将索引的分片的一个或多个副本制作成所谓的副本分片或简称副本。</p>
+<h2 id="副本-Replicasedit"><a href="#副本-Replicasedit" class="headerlink" title="副本(Replicasedit)"></a>副本(Replicasedit)</h2><p>副本，是对分片的复制。目的是为了当分片&#x2F;节点发生故障时提供高可用性，它允许您扩展搜索量&#x2F;吞吐量，因为可以在所有副本上并行执行搜索。</p>
+<p>总而言之，每个索引可以拆分为多个分片。索引也可以复制为零次（表示没有副本）或更多次。复制之后，每个索引将具有主分片(从原始分片复制而来的)和复制分片(主分片的副本)。</p>
+<p>可以在创建索引时为每个索引定义分片和副本的数量。创建索引后，您也可以随时动态更改副本数。您可以使用<code>_shrink</code> 和 <code>_splitAPI</code> 更改现有索引的分片数，但这不是一项轻松的任务，所以预先计划正确数量的分片是最佳方法。</p>
+<p>默认情况下，Elasticsearch 中的每个索引都分配了5个主分片和1个副本，这意味着如果集群中至少有两个节点，则索引将包含5个主分片和另外5个副本分片（1个完整副本），总计为每个索引10个分片。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>我们假设有一个集群由三个节点组成(Node1 , Node2 , Node3)。 它有两个主分片(P0 , P1)，每个主分片有两个副本分片(R0 , R1)。相同分片的副本不会放在同一节点，所以我们的集群看起来如下图所示 “有三个节点和一个索引的集群”。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1162587/201811/1162587-20181106221534193-554135498.png"></p>
+<p>对比图来类比传统关系型数据库：</p>
+<blockquote>
+<ul>
+<li>关系型数据库 -&gt; Databases(库) -&gt; Tables(表) -&gt; Rows(行) -&gt; Columns(列)。</li>
+<li>Elasticsearch -&gt; Indeces(索引) -&gt; Types(类型) -&gt; Documents(文档) -&gt; Fields(属性)。</li>
+</ul>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://cube295.eu.org">CXL</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://cube295.eu.org/2024/03/26/elasticsearch/">http://cube295.eu.org/2024/03/26/elasticsearch/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://cube295.eu.org" target="_blank">Monster龙</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/es/">es</a></div><div class="post_share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/" title="与ES交互"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">与ES交互</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/" title="与ES交互"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-26</div><div class="title">与ES交互</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">CXL</div><div class="author-info__description">记录点滴生活</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Monster295"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">CXL Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4-cluster"><span class="toc-number">1.</span> <span class="toc-text">集群(cluster)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8A%82%E7%82%B9-Node"><span class="toc-number"></span> <span class="toc-text">节点(Node)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%EF%BC%88Index%EF%BC%89"><span class="toc-number"></span> <span class="toc-text">索引（Index）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%EF%BC%88Type%EF%BC%89"><span class="toc-number"></span> <span class="toc-text">类型（Type）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%EF%BC%88Document%EF%BC%89"><span class="toc-number"></span> <span class="toc-text">文档（Document）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%89%87-Shards"><span class="toc-number"></span> <span class="toc-text">分片(Shards)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%AF%E6%9C%AC-Replicasedit"><span class="toc-number"></span> <span class="toc-text">副本(Replicasedit)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number"></span> <span class="toc-text">小结</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/26/elasticsearch/" title="elasticsearch简介">elasticsearch简介</a><time datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/" title="与ES交互">与ES交互</a><time datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/26/hello-world/" title="Hello World">Hello World</a><time datetime="2024-03-26T13:06:19.641Z" title="发表于 2024-03-26 21:06:19">2024-03-26</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/bg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By CXL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="false"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
