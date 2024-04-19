@@ -53,7 +53,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2024-03-28 15:42:27'
+  postUpdate: '2024-04-19 11:20:40'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -171,40 +171,131 @@
     document.addEventListener('pjax:send', () => { preloader.initLoading() })
     document.addEventListener('pjax:complete', () => { preloader.endLoading() })
   }
-})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('/img/bg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Monster龙"><img class="site-icon" src="/img/title.jpg"/><span class="site-name">Monster龙</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Monster龙</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/03/26/elasticsearch/" title="elasticsearch简介">elasticsearch简介</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time></span></div><div class="content">Elasticsearch是一个近乎实时（NRT）的搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。通常有集群，节点，分片，副本等概念。
-集群(cluster)集群(cluster)是一组具有相同cluster.name的节点集合，他们协同工作，共享数据并提供故障转移和扩展功能，当然一个节点也可以组成一个集群。
-集群由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入集群的话，则该节点只能是集群的一部分。
-【集群健康状态】
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">45</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('/img/bg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Monster龙"><img class="site-icon" src="/img/title.jpg"/><span class="site-name">Monster龙</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Monster龙</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Callout/" title="Callout">Callout</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">
+Callout类似于数据库的存储过程、存储函数，当一个值改变时，另一个值也跟着改变。
+工厂类：在Factory包中新建CalloutFactory类，继承CustomCalloutFactory
+创建CalloutFactory.xml文件，name和class选自己新建的类，service添加IColumnCalloutFactory
+创建Callout类，见名知意，以Callout结尾，继承CustomCallout
+在工厂类中注册Callout类，注册时需要指定哪个表的那个字段发生变化时，会触发该类
+导包的快捷键，ctrl+shift+o
+Callout事件在beforeSave和AfterSave之前先触发，是值改变事件
+应用场景：一个字段的值会随着 其他某个字段的改变而改变，如果会随着多个字段的改变而改变时，则需要创建多个Callout类，分别进行值的修改。
 
-集群状态通过 绿，黄，红 来标识
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Process/" title="Process">Process</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">
+ 新建Process继承CustomProcess，实现方法，prepare是前置准备，一般不用；主要使用doIt方法
+ Process有两种用法：
+当成一个按钮，点击后去更新状态等操作，一般是调用第三方和第三方对接，包括对接中间库、对接接口等
+例子：点击按钮后修改有效状态
+在数据库中创建btnChange字段，在前端student表与列中点击从数据库中创建列，在表与列中找到btn_change，将引用改为按钮
+然后点击流程，新建流程，Java类名称填写自己新建的DemoProcess的全类名，名称是DemoProcess，即全类名去掉前面的部分。
+填写描述
+修改数据库访问级别为全部。保存
+返回表与列，将新建的流程填入，这样会将按钮和后台的process关联起来，可以去点击。（同步列）
+进入学生表的页签，点击创建字段，在页签编辑器中修改名称和大小
 
-绿色 - 一切都很好（集群功能齐全）。
-黄色 - 所有数据均可用，但尚未分配一些副本（集群功能齐全）。
-红色 - 某些数据由于某种原因不可用（集群部分功能）
 
 
-要检查群集运行状况，我们可以在 Kibana 控制台中运行以下命令GET /_cluster/health，得到如下信息：
-1234567891011121314151617&#123;  &quot;cluster_name&quot;: &quot;elasticsearch&quot;,   ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/" title="与ES交互">与ES交互</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time></span></div><div class="content">目前与 elasticsearch 交互主要有两种方式：Client API 和 RESTful API。
-数据格式Elasticsearch 是面向文档的，意味着它存储整个对象或文档。Elasticsearch 不仅存储文档，而且 每个文档的内容可以被检索。在 Elasticsearch 中，你对文档进行索引、检索、排序和过滤而不是对行列数据。这是一种完全不同的思考数据的方式，也是 Elasticsearch 能支持复杂全文检索的原因。
-索引的应用查看我们的所有索引信息：
-123456GET _search&#123;  &quot;query&quot;: &#123;    &quot;match_all&quot;: &#123;&#125;  &#125;&#125;
 
-查看索引
-curl -XGET “http://localhost:9200/_cat/indices?v“ -u elastic:6NrG3wS4vF9iGPYrd1uQ
-创建索引12345678910PUT /my-index&#123;  &quot;mappings&quot;: &#123;//映射 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/03/26/hello-world/" title="Hello World">Hello World</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-03-26T13:06:19.641Z" title="发表于 2024-03-26 21:06:19">2024-03-26</time></span></div><div class="content">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;
 
-More info: Writing
-Run server1$ hexo server
+123456789@Override    protected String doIt() throws Exception &#123;//        点击按钮后修改有效状态,修改学生表的IsActive状态         ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/" title="idea快捷键">idea快捷键</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">Ctrl+Shift + Enter，语句完成。
+“！”，否定完成，输入表达式时按 “！”键。
+Ctrl+E，最近的文件。
+Ctrl+Shift+E，最近更改的文件。
+Shift+Click，可以关闭文件。
+Ctrl+[ OR ]，可以跑到大括号的开头与结尾。
+Ctrl+F12，可以显示当前文件的结构。
+Ctrl+F7，可以查询当前元素在当前文件中的引用，然后按 F3 可以选择。
+Ctrl+N，可以快速打开类。
+Ctrl+Shift+N，可以快速打开文件。
+Alt+Q，可以看到当前方法的声明。
+Ctrl+P，可以显示参数信息。
+Ctrl+Shift+Insert，可以选择剪贴板内容并插入。
+Alt+Insert，可以生成构造器&#x2F;Getter&#x2F;Setter等。
+Ctrl+Alt+V，可以引入变量。例如：new String(); 自动导入变量定义。
+Ctrl+Alt+T，可以把代码包在一个块内，例如：try&#x2F;catch。
+Ctrl+Enter，导入包，自动修正。
+Ctrl+Alt+L，格式化代码。
+Ctrl+Alt+I，将选中的代码进行自动缩进编排，这个功能 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" title="接口开发规范">接口开发规范</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">
+service层不允许传递对象值，需要明确基本参数
+service方法命名select&#x2F;get&#x2F;selectGroup&#x2F;selectByCondation
+工具及方法的返回值和接收参数尽量使用java级的标准接口对象，如DataSource、Properties，不要返回个性对象
+api路径格式要求：
+路径编排：  &#x2F;名词&#x2F;名词&#x2F;…&#x2F;动词  
+不允许出现getStudent（驼峰命名法）、GetStudent（帕斯卡命名法）、get_student（匈牙利命名法），只允许出现纯小写字母 student&#x2F;get
 
-More info: Server
-Generate static files1$ hexo generate
 
-More info: Generating
-Deploy to remote sites1$ hexo deploy
 
-More info: Deployment
-</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">CXL</div><div class="author-info__description">记录点滴生活</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Monster295"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">CXL Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/26/elasticsearch/" title="elasticsearch简介">elasticsearch简介</a><time datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/" title="与ES交互">与ES交互</a><time datetime="2024-03-26T15:18:41.000Z" title="发表于 2024-03-26 23:18:41">2024-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/26/hello-world/" title="Hello World">Hello World</a><time datetime="2024-03-26T13:06:19.641Z" title="发表于 2024-03-26 21:06:19">2024-03-26</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/es/" style="font-size: 1.1em; color: #999">es</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><span class="card-archive-list-count">3</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">3</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-03-28T07:42:27.485Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/bg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By CXL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+【推荐】单行字符数限制不超过 120 个，超出需要换行，换行时遵循如下原则： 1） 第二行相对第一行缩进 4 个空格，从第三行开始，不再继续缩进，参考示例。 2） 运算符与下文一起换行。 3） 方法调用的点符号与下文一起换行。 4） 方法调用时，多个参数，需要换行时，在逗号后进行。 5） 在括号前不要换行，见反例。
+12345678910111213141516正例：StringBuffer  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E5%B9%B3%E5%8F%B0/" title="平台">平台</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">
+后台自开发http、bean响应参数说明: 1、自开发http接口统一返回JSONResult,自定义其中的code、message、result 2、自开发bean，如果有异常可抛出平台自定义的异常BizException，记录code和message,平台对响应参数进行封装成返回前台
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E7%AE%80%E5%8D%95%E7%9A%84controller%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/" title="简单的controller接口开发">简单的controller接口开发</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">简单的controller接口开发
+@RequestMapping(“inner&#x2F;test&#x2F;emp”)，如果需要登录后才能调用，加上inner；否则加上open
+@RestController
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/Nginx%E5%91%BD%E4%BB%A4/" title="nginx命令">nginx命令</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">
+重启nginx    .&#x2F;nginx -s reload 重新加载配置文件
+停止nginx    .&#x2F;nginx -s stop
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/%E6%8E%88%E6%9D%83/" title="授权">授权</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">新建用户
+1CREATE USER &#x27;ai_research&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;P@ssW0Rd&#x27;;
+
+授予权限
+123GRANT ALL PRIVILEGES ON *.* TO &#x27;ai_research&#x27;@&#x27;%&#x27;;FLUSH PRIVILEGES;
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="常用命令">常用命令</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">
+查找文件： find / -type f -name &quot;文件名&quot;
+
+移动文件或重命名：mv
+
+查看端口：ss -tulp | grep PORT_NUMBER或者netstat -tulpn | grep PORT_NUMBER
+
+安装.deb文件：sudo dpkg -i 软件包名.deb
+
+进入docker目录： docker exec -it 容器名或id /bin/bash
+
+查看docker日志：docker logs -f -n 500 容器名或id
+
+导出docker日志：docker logs -f -n 500 容器名或id &gt; 文件名
+
+chown (change owner) ： 修改所属用户与组。
+
+chmod (change mode) ： 修改用户的权限。
+
+接下来的字符中，以三个为一组，且均为 rwx 的三个参数的组合。其中， r 代表可读(read)、 w 代表可写(write)、 x 代表可执行(execute)。 要注意的是，这三个权限的位置不会改变，如果没有权限，就会出现减号 - 而已。
+
+
+每个文件的属性由左边第一部分 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/" title="unzip中文乱码">unzip中文乱码</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></span></div><div class="content">在 Linux 中解压中文文件名压缩包时出现乱码，是因为 unzip 命令默认使用系统的本地编码来解压，而 Windows 下生成的 zip 文件中的编码是 GBK&#x2F;GB2312 等，导致这些 zip 文件在 Linux 下解压时出现乱码问题。
+解决方法:
+
+使用 -O 选项指定编码:
+
+1unzip -O CP936 xxx.zip
+
+该命令将使用 GBK&#x2F;GB2312 编码来解压 xxx.zip 文件。
+
+使用 unar 命令:
+
+1unar xxx.zip
+
+unar 命令支持自动识别编码，可以正确解压中文文件名压缩包。
+
+安装 unzip-iconv:
+
+1sudo apt install unzip-iconv
+
+安装 unzip-iconv 后，就可以使用 -O 选项来指定编码了。
+
+使用其他解压工具:
+
+
+7-Zip
+PeaZip
+File Roller
+
+这些解压工具都支持自动识别编码，可以正确解压中文文件名压缩包。
+在 Ubuntu 系统中，可以使用 unzip 命令解压 zip 文件到指定路径。
+基本语法:
+1unzip [-c][-d dire ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">CXL</div><div class="author-info__description">记录点滴生活</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">45</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Monster295"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">CXL Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Callout/" title="Callout">Callout</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Process/" title="Process">Process</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/" title="idea快捷键">idea快捷键</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" title="接口开发规范">接口开发规范</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E5%B9%B3%E5%8F%B0/" title="平台">平台</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/jooq/" style="font-size: 1.18em; color: #999ca1">jooq</a> <a href="/tags/java/" style="font-size: 1.42em; color: #99a6b7">java</a> <a href="/tags/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/" style="font-size: 1.34em; color: #99a3b0">规范和快捷键</a> <a href="/tags/mysql/" style="font-size: 1.1em; color: #999">mysql</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/spring/" style="font-size: 1.1em; color: #999">spring</a> <a href="/tags/AntDesign/" style="font-size: 1.18em; color: #999ca1">AntDesign</a> <a href="/tags/vue/" style="font-size: 1.5em; color: #99a9bf">vue</a> <a href="/tags/linux/" style="font-size: 1.42em; color: #99a6b7">linux</a> <a href="/tags/ES/" style="font-size: 1.18em; color: #999ca1">ES</a> <a href="/tags/docker/" style="font-size: 1.26em; color: #999fa8">docker</a> <a href="/tags/%E6%96%B0%E5%B9%B3%E5%8F%B0/" style="font-size: 1.26em; color: #999fa8">新平台</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><span class="card-archive-list-count">44</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">45</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-04-19T03:20:40.766Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/bg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By CXL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>window.typedJSFn = {
   init: (str) => {
     window.typed = new Typed('#subtitle', Object.assign({
       strings: str,

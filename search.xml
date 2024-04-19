@@ -4,17 +4,739 @@
   
     
     <entry>
-      <title>elasticsearch简介</title>
-      <link href="/2024/03/26/elasticsearch/"/>
-      <url>/2024/03/26/elasticsearch/</url>
+      <title>Callout</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Callout/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Callout/</url>
       
-        <content type="html"><![CDATA[<p><code>Elasticsearch是一个近乎实时（NRT）的搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。通常有集群，节点，分片，副本等概念。</code></p><h3 id="集群-cluster"><a href="#集群-cluster" class="headerlink" title="集群(cluster)"></a>集群(cluster)</h3><p>集群(cluster)是一组具有相同<code>cluster.name</code>的节点集合，他们协同工作，共享数据并提供故障转移和扩展功能，当然一个节点也可以组成一个集群。</p><p>集群由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入集群的话，则该节点只能是集群的一部分。</p><p><strong>【集群健康状态】</strong></p><blockquote><p>集群状态通过 <strong>绿</strong>，<strong>黄</strong>，<strong>红</strong> 来标识</p><ul><li><strong>绿色</strong> - 一切都很好（集群功能齐全）。</li><li><strong>黄色</strong> - 所有数据均可用，但尚未分配一些副本（集群功能齐全）。</li><li><strong>红色</strong> - 某些数据由于某种原因不可用（集群部分功能）</li></ul></blockquote><p>要检查群集运行状况，我们可以在 Kibana 控制台中运行以下命令<code>GET /_cluster/health</code>，得到如下信息：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;cluster_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;elasticsearch&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;yellow&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;timed_out&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_nodes&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_data_nodes&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_primary_shards&quot;</span><span class="punctuation">:</span> <span class="number">28</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_shards&quot;</span><span class="punctuation">:</span> <span class="number">28</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;relocating_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;initializing_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unassigned_shards&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;delayed_unassigned_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_pending_tasks&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_in_flight_fetch&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;task_max_waiting_in_queue_millis&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_shards_percent_as_number&quot;</span><span class="punctuation">:</span> <span class="number">84.84848484848484</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><h2 id="节点-Node"><a href="#节点-Node" class="headerlink" title="节点(Node)"></a>节点(Node)</h2><p>节点，一个运行的 ES 实例就是一个节点，节点存储数据并参与集群的索引和搜索功能。</p><p>就像集群一样，节点由名称标识，默认情况下，该名称是在启动时分配给节点的随机通用唯一标识符（UUID）。如果不需要默认值，可以定义所需的任何节点名称。此名称对于管理目的非常重要，您可以在其中识别网络中哪些服务器与 Elasticsearch 集群中的哪些节点相对应。</p><p>可以将节点配置为按集群名称加入特定集群。默认情况下，每个节点都设置为加入一个名为 cluster 的 elasticsearch 集群，这意味着如果您在网络上启动了许多节点并且假设它们可以相互发现 - 它们将自动形成并加入一个名为 elasticsearch 的集群。</p><h2 id="索引（Index）"><a href="#索引（Index）" class="headerlink" title="索引（Index）"></a>索引（Index）</h2><p>索引是具有某些类似特征的文档集合。例如，您可以拥有店铺数据的索引，商品的一个索引以及订单数据的一个索引。</p><p>索引由名称标识（必须全部小写），此名称用于在对其中的文档执行索引，搜索，更新和删除操作时引用索引。</p><h2 id="类型（Type）"><a href="#类型（Type）" class="headerlink" title="类型（Type）"></a>类型（Type）</h2><p>类型，曾经是索引的逻辑类别&#x2F;分区，允许您在同一索引中存储不同类型的文档，例如，一种类型用于用户，另一种类型用于博客帖子。</p><blockquote><p><strong>在 6.0.0 中弃用，以后将不再可能在索引中创建多个类型，并且将在更高版本中删除类型的整个概念</strong>。</p></blockquote><h2 id="文档（Document）"><a href="#文档（Document）" class="headerlink" title="文档（Document）"></a>文档（Document）</h2><p>文档是可以建立索引的基本信息单元。例如，您可以为单个客户提供文档，为单个产品提供一个文档，为单个订单提供一个文档。该文档以JSON（JavaScript Object Notation）表示，JSON是一种普遍存在的互联网数据交换格式。</p><p>在索引&#x2F;类型中，您可以根据需要存储任意数量的文档。请注意，尽管文档实际上驻留在索引中，但实际上必须将文档编入索引&#x2F;分配给索引中的类型。</p><h2 id="分片-Shards"><a href="#分片-Shards" class="headerlink" title="分片(Shards)"></a>分片(Shards)</h2><p>索引可能存储大量可能超过单个节点的硬件限制的数据。例如，占用1TB磁盘空间的十亿个文档的单个索引可能不适合单个节点的磁盘，或者可能太慢而无法单独从单个节点提供搜索请求。</p><p>为了解决这个问题，Elasticsearch 提供了将索引细分为多个称为分片的功能。创建索引时，只需定义所需的分片数即可。每个分片本身都是一个功能齐全且独立的“索引”，可以托管在集群中的任何节点上。</p><p>设置分片的目的及原因主要是：</p><ul><li>它允许您水平拆分&#x2F;缩放内容量</li><li>它允许您跨分片（可能在多个节点上）分布和并行化操作，从而提高性能&#x2F;吞吐量</li></ul><p>分片的分布方式以及如何将其文档聚合回搜索请求的机制完全由 Elasticsearch 管理，对用户而言是透明的。</p><p>在可能随时发生故障的网络&#x2F;云环境中，分片非常有用，建议使用故障转移机制，以防分片&#x2F;节点以某种方式脱机或因任何原因消失。为此，Elasticsearch 允许您将索引的分片的一个或多个副本制作成所谓的副本分片或简称副本。</p><h2 id="副本-Replicasedit"><a href="#副本-Replicasedit" class="headerlink" title="副本(Replicasedit)"></a>副本(Replicasedit)</h2><p>副本，是对分片的复制。目的是为了当分片&#x2F;节点发生故障时提供高可用性，它允许您扩展搜索量&#x2F;吞吐量，因为可以在所有副本上并行执行搜索。</p><p>总而言之，每个索引可以拆分为多个分片。索引也可以复制为零次（表示没有副本）或更多次。复制之后，每个索引将具有主分片(从原始分片复制而来的)和复制分片(主分片的副本)。</p><p>可以在创建索引时为每个索引定义分片和副本的数量。创建索引后，您也可以随时动态更改副本数。您可以使用<code>_shrink</code> 和 <code>_splitAPI</code> 更改现有索引的分片数，但这不是一项轻松的任务，所以预先计划正确数量的分片是最佳方法。</p><p>默认情况下，Elasticsearch 中的每个索引都分配了5个主分片和1个副本，这意味着如果集群中至少有两个节点，则索引将包含5个主分片和另外5个副本分片（1个完整副本），总计为每个索引10个分片。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>我们假设有一个集群由三个节点组成(Node1 , Node2 , Node3)。 它有两个主分片(P0 , P1)，每个主分片有两个副本分片(R0 , R1)。相同分片的副本不会放在同一节点，所以我们的集群看起来如下图所示 “有三个节点和一个索引的集群”。</p><p><img src="https://img2018.cnblogs.com/blog/1162587/201811/1162587-20181106221534193-554135498.png"></p><p>对比图来类比传统关系型数据库：</p><blockquote><ul><li>关系型数据库 -&gt; Databases(库) -&gt; Tables(表) -&gt; Rows(行) -&gt; Columns(列)。</li><li>Elasticsearch -&gt; Indeces(索引) -&gt; Types(类型) -&gt; Documents(文档) -&gt; Fields(属性)。</li></ul></blockquote>]]></content>
+        <content type="html"><![CDATA[<ol><li>Callout类似于数据库的存储过程、存储函数，当一个值改变时，另一个值也跟着改变。</li><li>工厂类：在Factory包中新建CalloutFactory类，继承CustomCalloutFactory</li><li>创建CalloutFactory.xml文件，name和class选自己新建的类，service添加IColumnCalloutFactory</li><li>创建Callout类，见名知意，以Callout结尾，继承CustomCallout</li><li>在工厂类中注册Callout类，注册时需要指定哪个表的那个字段发生变化时，会触发该类</li><li>导包的快捷键，ctrl+shift+o</li><li>Callout事件在beforeSave和AfterSave之前先触发，是值改变事件</li><li>应用场景：一个字段的值会随着 其他某个字段的改变而改变，如果会随着多个字段的改变而改变时，则需要创建多个Callout类，分别进行值的修改。</li></ol>]]></content>
       
       
       
         <tags>
             
-            <tag> es </tag>
+            <tag> 规范和快捷键 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Process</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Process/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Process/</url>
+      
+        <content type="html"><![CDATA[<ul><li><input disabled="" type="checkbox"> 新建Process继承CustomProcess，实现方法，prepare是前置准备，一般不用；主要使用doIt方法</li><li><input disabled="" type="checkbox"> Process有两种用法：<ol><li>当成一个按钮，点击后去更新状态等操作，一般是调用第三方和第三方对接，包括对接中间库、对接接口等<ul><li>例子：点击按钮后修改有效状态</li><li>在数据库中创建btnChange字段，在前端student表与列中点击从数据库中创建列，在表与列中找到btn_change，将引用改为按钮</li><li>然后点击流程，新建流程，Java类名称填写自己新建的DemoProcess的全类名，名称是DemoProcess，即全类名去掉前面的部分。</li><li>填写描述</li><li>修改数据库访问级别为全部。保存</li><li>返回表与列，将新建的流程填入，这样会将按钮和后台的process关联起来，可以去点击。（同步列）</li><li>进入学生表的页签，点击创建字段，在页签编辑器中修改名称和大小</li></ul></li></ol></li></ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> String <span class="title function_">doIt</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"><span class="comment">//        点击按钮后修改有效状态,修改学生表的IsActive状态</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">record_ID</span> <span class="operator">=</span> getRecord_ID();</span><br><span class="line">        <span class="type">MStudent</span> <span class="variable">mStudent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MStudent</span>(getCtx(), record_ID, get_TrxName());</span><br><span class="line">        mStudent.setIsActive(<span class="literal">false</span>);</span><br><span class="line">        mStudent.saveEx();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><ul><li><input disabled="" type="checkbox"> Process业务场景：在报检后，需要确认状态，需要点一下，去更改状态</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 规范和快捷键 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>idea快捷键</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
+      
+        <content type="html"><![CDATA[<p>Ctrl+Shift + Enter，语句完成。</p><p>“！”，否定完成，输入表达式时按 “！”键。</p><p>Ctrl+E，最近的文件。</p><p>Ctrl+Shift+E，最近更改的文件。</p><p>Shift+Click，可以关闭文件。</p><p>Ctrl+[ OR ]，可以跑到大括号的开头与结尾。</p><p>Ctrl+F12，可以显示当前文件的结构。</p><p>Ctrl+F7，可以查询当前元素在当前文件中的引用，然后按 F3 可以选择。</p><p>Ctrl+N，可以快速打开类。</p><p>Ctrl+Shift+N，可以快速打开文件。</p><p>Alt+Q，可以看到当前方法的声明。</p><p>Ctrl+P，可以显示参数信息。</p><p>Ctrl+Shift+Insert，可以选择剪贴板内容并插入。</p><p>Alt+Insert，可以生成构造器&#x2F;Getter&#x2F;Setter等。</p><p>Ctrl+Alt+V，可以引入变量。例如：new String(); 自动导入变量定义。</p><p>Ctrl+Alt+T，可以把代码包在一个块内，例如：try&#x2F;catch。</p><p>Ctrl+Enter，导入包，自动修正。</p><p>Ctrl+Alt+L，格式化代码。</p><p>Ctrl+Alt+I，将选中的代码进行自动缩进编排，这个功能在编辑 JSP 文件时也可以工作。</p><p>Ctrl+Alt+O，优化导入的类和包。</p><p>Ctrl+R，替换文本。</p><p>Ctrl+F，查找文本。</p><p>Ctrl+Shift+Space，自动补全代码。</p><p>Ctrl+空格，代码提示（与系统输入法快捷键冲突）。</p><p>Ctrl+Shift+Alt+N，查找类中的方法或变量。</p><p>Alt+Shift+C，最近的更改。</p><p>Alt+Shift+Up&#x2F;Down，上&#x2F;下移一行。</p><p>Shift+F6，重构 – 重命名。</p><p>Ctrl+X，删除行。</p><p>Ctrl+D，复制行。</p><p>Ctrl+&#x2F;或Ctrl+Shift+&#x2F;，注释（&#x2F;&#x2F;或者&#x2F;**&#x2F;）。</p><p>Ctrl+J，自动代码（例如：serr）。</p><p>Ctrl+Alt+J，用动态模板环绕。</p><p>Ctrl+H，显示类结构图（类的继承层次）。</p><p>Ctrl+Q，显示注释文档。</p><p>Alt+F1，查找代码所在位置。</p><p>Alt+1，快速打开或隐藏工程面板。</p><p>Ctrl+Alt+left&#x2F;right，返回至上次浏览的位置。</p><p>Alt+left&#x2F;right，切换代码视图。</p><p>Alt+Up&#x2F;Down，在方法间快速移动定位。</p><p>Ctrl+Shift+Up&#x2F;Down，向上&#x2F;下移动语句。</p><p>F2 或 Shift+F2，高亮错误或警告快速定位。</p><p>Tab，代码标签输入完成后，按 Tab，生成代码。</p><p>Ctrl+Shift+F7，高亮显示所有该文本，按 Esc 高亮消失。</p><p>Alt+F3，逐个往下查找相同文本，并高亮显示。</p><p>Ctrl+Up&#x2F;Down，光标中转到第一行或最后一行下。</p><p>Ctrl+B&#x2F;Ctrl+Click，快速打开光标处的类或方法（跳转到定义处）。</p><p>Ctrl+Alt+B，跳转到方法实现处。</p><p>Ctrl+Shift+Backspace，跳转到上次编辑的地方。</p><p>Ctrl+O，重写方法。</p><p>Ctrl+Alt+Space，类名自动完成。</p><p>Ctrl+Alt+Up&#x2F;Down，快速跳转搜索结果。</p><p>Ctrl+Shift+J，整合两行。</p><p>Alt+F8，计算变量值。</p><p>Ctrl+Shift+V，可以将最近使用的剪贴板内容选择插入到文本。</p><p>Ctrl+Alt+Shift+V，简单粘贴。</p><p>Shift+Esc，不仅可以把焦点移到编辑器上，而且还可以隐藏当前（或最后活动的）工具窗口。</p><p>F12，把焦点从编辑器移到最近使用的工具窗口。</p><p>Shift+F1，要打开编辑器光标字符处使用的类或者方法 Java 文档的浏览器。</p><p>Ctrl+W，可以选择单词继而语句继而行继而函数。</p><p>Ctrl+Shift+W，取消选择光标所在词。</p><p>Alt+F7，查找整个工程中使用地某一个类、方法或者变量的位置。</p><p>Ctrl+I，实现方法。</p><p>Ctrl+Shift+U，大小写转化。</p><p>Ctrl+Y，删除当前行。</p><p>Shift+Enter，向下插入新行。</p><p>psvm&#x2F;sout，main&#x2F;System.out.println(); Ctrl+J，查看更多。</p><p>Ctrl+Shift+F，全局查找。</p><p>Ctrl+F，查找&#x2F;Shift+F3，向上查找&#x2F;F3，向下查找。</p><p>Ctrl+Shift+S，高级搜索。</p><p>Ctrl+U，转到父类。</p><p>Ctrl+Alt+S，打开设置对话框。</p><p>Alt+Shift+Inert，开启&#x2F;关闭列选择模式。</p><p>Ctrl+Alt+Shift+S，打开当前项目&#x2F;模块属性。</p><p>Ctrl+G，定位行。</p><p>Alt+Home，跳转到导航栏。</p><p>Ctrl+Enter，上插一行。</p><p>Ctrl+Backspace，按单词删除。</p><p>Ctrl+”+&#x2F;-”，当前方法展开、折叠。</p><p>Ctrl+Shift+”+&#x2F;-”，全部展开、折叠。</p><p>调试部分、编译</p><p>Ctrl+F2，停止。</p><p>Alt+Shift+F9，选择 Debug。</p><p>Alt+Shift+F10，选择 Run。</p><p>Ctrl+Shift+F9，编译。</p><p>Ctrl+Shift+F10，运行。</p><p>Ctrl+Shift+F8，查看断点。</p><p>F8，步过。</p><p>F7，步入。</p><p>Shift+F7，智能步入。</p><p>Shift+F8，步出。</p><p>Alt+Shift+F8，强制步过。</p><p>Alt+Shift+F7，强制步入。</p><p>Alt+F9，运行至光标处。</p><p>Ctrl+Alt+F9，强制运行至光标处。</p><p>F9，恢复程序。</p><p>Alt+F10，定位到断点。</p><p>Ctrl+F8，切换行断点。</p><p>Ctrl+F9，生成项目。</p><p>Alt+1，项目。</p><p>Alt+2，收藏。</p><p>Alt+6，TODO。</p><p>Alt+7，结构。</p><p>Ctrl+Shift+C，复制路径。</p><p>Ctrl+Alt+Shift+C，复制引用，必须选择类名。</p><p>Ctrl+Alt+Y，同步。</p><p>Ctrl+~，快速切换方案（界面外观、代码风格、快捷键映射等菜单）。</p><p>Shift+F12，还原默认布局。</p><p>Ctrl+Shift+F12，隐藏&#x2F;恢复所有窗口。</p><p>Ctrl+F4，关闭。</p><p>Ctrl+Shift+F4，关闭活动选项卡。</p><p>Ctrl+Tab，转到下一个拆分器。</p><p>Ctrl+Shift+Tab，转到上一个拆分器。</p><p>重构</p><p>Ctrl+Alt+Shift+T，弹出重构菜单。</p><p>Shift+F6，重命名。</p><p>F6，移动。</p><p>F5，复制。</p><p>Alt+Delete，安全删除。</p><p>Ctrl+Alt+N，内联。</p><p>查找</p><p>Ctrl+F，查找。</p><p>Ctrl+R，替换。</p><p>F3，查找下一个。</p><p>Shift+F3，查找上一个。</p><p>Ctrl+Shift+F，在路径中查找。</p><p>Ctrl+Shift+R，在路径中替换。</p><p>Ctrl+Shift+S，搜索结构。</p><p>Ctrl+Shift+M，替换结构。</p><p>Alt+F7，查找用法。</p><p>Ctrl+Alt+F7，显示用法。</p><p>Ctrl+F7，在文件中查找用法。</p><p>Ctrl+Shift+F7，在文件中高亮显示用法。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 规范和快捷键 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>接口开发规范</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/</url>
+      
+        <content type="html"><![CDATA[<ol><li>service层不允许传递对象值，需要明确基本参数</li><li>service方法命名select&#x2F;get&#x2F;selectGroup&#x2F;selectByCondation</li><li>工具及方法的返回值和接收参数尽量使用java级的标准接口对象，如DataSource、Properties，不要返回个性对象</li><li>api路径格式要求：<ol><li>路径编排：  &#x2F;名词&#x2F;名词&#x2F;…&#x2F;动词  </li><li>不允许出现getStudent（驼峰命名法）、GetStudent（帕斯卡命名法）、get_student（匈牙利命名法），只允许出现纯小写字母 student&#x2F;get</li></ol></li></ol><p>【推荐】单行字符数限制不超过 120 个，超出需要换行，换行时遵循如下原则：<br> 1） 第二行相对第一行缩进 4 个空格，从第三行开始，不再继续缩进，参考示例。<br> 2） 运算符与下文一起换行。<br> 3） 方法调用的点符号与下文一起换行。<br> 4） 方法调用时，多个参数，需要换行时，在逗号后进行。<br> 5） 在括号前不要换行，见反例。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">正例：</span><br><span class="line"><span class="type">StringBuffer</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line"><span class="comment">// 超过 120 个字符的情况下，换行缩进 4 个空格，点号和方法名称一起换行</span></span><br><span class="line">sb.append(<span class="string">&quot;zi&quot;</span>).append(<span class="string">&quot;xin&quot;</span>)...</span><br><span class="line">    .append(<span class="string">&quot;huang&quot;</span>)...</span><br><span class="line">    .append(<span class="string">&quot;huang&quot;</span>)...</span><br><span class="line">    .append(<span class="string">&quot;huang&quot;</span>);</span><br><span class="line">反例：</span><br><span class="line"><span class="type">StringBuffer</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line"><span class="comment">// 超过 120 个字符的情况下，不要在括号前换行</span></span><br><span class="line">sb.append(<span class="string">&quot;zi&quot;</span>).append(<span class="string">&quot;xin&quot;</span>)...append</span><br><span class="line">     (<span class="string">&quot;huang&quot;</span>);</span><br><span class="line"><span class="comment">// 参数很多的方法调用可能超过 120 个字符，不要在逗号前换行</span></span><br><span class="line"><span class="comment">// 这里应该在逗号后面换行</span></span><br><span class="line">method(args1, args2, args3, ...</span><br><span class="line">     , argsX);</span><br></pre></td></tr></table></figure><p>【推荐】使用 entrySet 遍历 Map 类集合 KV，而不是 keySet 方式进行遍历。<br> 说明：keySet 其实是遍历了 2 次，一次是转为 Iterator 对象，另一次是从 hashMap 中取出key 所对应的 value。而 entrySet 只是遍历了一次就把 key 和 value 都放到了 entry 中，效率更高。如果是 JDK8，使用 Map.foreach 方法。<br> 正例：values()返回的是 V 值集合，是一个 list 集合对象；keySet()返回的是 K 值集合，是一个 Set 集合对象；entrySet()返回的是 K-V 值组合集合。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 规范和快捷键 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>平台</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E5%B9%B3%E5%8F%B0/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E5%B9%B3%E5%8F%B0/</url>
+      
+        <content type="html"><![CDATA[<ul><li>后台自开发http、bean响应参数说明:<br> 1、自开发http接口统一返回JSONResult,自定义其中的code、message、result<br> 2、自开发bean，如果有异常可抛出平台自定义的异常BizException，记录code和message,平台对响应参数进行封装成返回前台</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 规范和快捷键 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>简单的controller接口开发</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E7%AE%80%E5%8D%95%E7%9A%84controller%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E7%AE%80%E5%8D%95%E7%9A%84controller%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/</url>
+      
+        <content type="html"><![CDATA[<h3 id="简单的controller接口开发"><a href="#简单的controller接口开发" class="headerlink" title="简单的controller接口开发"></a>简单的controller接口开发</h3><ul><li>@RequestMapping(“inner&#x2F;test&#x2F;emp”)，如果需要登录后才能调用，加上inner；否则加上open</li><li>@RestController</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 规范和快捷键 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>nginx命令</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/Nginx%E5%91%BD%E4%BB%A4/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/Nginx%E5%91%BD%E4%BB%A4/</url>
+      
+        <content type="html"><![CDATA[<ol><li>重启nginx    .&#x2F;nginx -s reload 重新加载配置文件</li><li>停止nginx    .&#x2F;nginx -s stop</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>授权</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/%E6%8E%88%E6%9D%83/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/%E6%8E%88%E6%9D%83/</url>
+      
+        <content type="html"><![CDATA[<p>新建用户</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;ai_research&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;P@ssW0Rd&#x27;</span>;</span><br></pre></td></tr></table></figure><p>授予权限</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;ai_research&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line"></span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> mysql </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>常用命令</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+      
+        <content type="html"><![CDATA[<ul><li><p>查找文件： <code>find / -type f -name &quot;文件名&quot;</code></p></li><li><p>移动文件或重命名：<code>mv</code></p></li><li><p>查看端口：<code>ss -tulp | grep PORT_NUMBER</code>或者<code>netstat -tulpn | grep PORT_NUMBER</code></p></li><li><p>安装<code>.deb文件</code>：<code>sudo dpkg -i 软件包名.deb</code></p></li><li><p>进入docker目录： <code>docker exec -it 容器名或id /bin/bash</code></p></li><li><p>查看docker日志：<code>docker logs -f -n 500 容器名或id</code></p></li><li><p>导出docker日志：<code>docker logs -f -n 500 容器名或id &gt; 文件名</code></p></li><li><p>chown (change owner) ： 修改所属用户与组。</p></li><li><p>chmod (change mode) ： 修改用户的权限。</p></li><li><p>接下来的字符中，以三个为一组，且均为 rwx 的三个参数的组合。其中， r 代表可读(read)、 w 代表可写(write)、 x 代表可执行(execute)。 要注意的是，这三个权限的位置不会改变，如果没有权限，就会出现减号 - 而已。</p><p><img src="https://www.runoob.com/wp-content/uploads/2014/06/file-llls22.jpg"></p></li><li><p>每个文件的属性由左边第一部分的 10 个字符来确定（如下图）</p><p> <img src="https://www.runoob.com/wp-content/uploads/2014/06/363003_1227493859FdXT.png" alt="363003_1227493859FdXT"></p><p>从左至右用 <strong>0-9</strong> 这些数字来表示。</p><p>第 <strong>0</strong> 位确定文件类型，第 <strong>1-3</strong> 位确定属主（该文件的所有者）拥有该文件的权限。</p><p>第4-6位确定属组（所有者的同组用户）拥有该文件的权限，第7-9位确定其他用户拥有该文件的权限。</p><p>其中，第 <strong>1、4、7</strong> 位表示读权限，如果用 r 字符表示，则有读权限，如果用 - 字符表示，则没有读权限；</p><p>第 <strong>2、5、8</strong> 位表示写权限，如果用 w 字符表示，则有写权限，如果用 - 字符表示没有写权限；第 <strong>3、6、9</strong> 位表示可执行权限，如果用 x 字符表示，则有执行权限，如果用 - 字符表示，则没有执行权限。</p></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>unzip中文乱码</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</url>
+      
+        <content type="html"><![CDATA[<p>在 Linux 中解压中文文件名压缩包时出现乱码，是因为 unzip 命令默认使用系统的本地编码来解压，而 Windows 下生成的 zip 文件中的编码是 GBK&#x2F;GB2312 等，导致这些 zip 文件在 Linux 下解压时出现乱码问题。</p><p><strong>解决方法:</strong></p><ol><li><strong>使用 -O 选项指定编码:</strong></li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -O CP936 xxx.zip</span><br></pre></td></tr></table></figure><p>该命令将使用 GBK&#x2F;GB2312 编码来解压 xxx.zip 文件。</p><ol start="2"><li><strong>使用 unar 命令:</strong></li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unar xxx.zip</span><br></pre></td></tr></table></figure><p>unar 命令支持自动识别编码，可以正确解压中文文件名压缩包。</p><ol start="3"><li><strong>安装 unzip-iconv:</strong></li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install unzip-iconv</span><br></pre></td></tr></table></figure><p>安装 unzip-iconv 后，就可以使用 -O 选项来指定编码了。</p><ol start="4"><li><strong>使用其他解压工具:</strong></li></ol><ul><li>7-Zip</li><li>PeaZip</li><li>File Roller</li></ul><p>这些解压工具都支持自动识别编码，可以正确解压中文文件名压缩包。</p><p>在 Ubuntu 系统中，可以使用 <code>unzip</code> 命令解压 zip 文件到指定路径。</p><p><strong>基本语法:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip [-c][-d directory][-n][-t][-v] zipfile</span><br></pre></td></tr></table></figure><p><strong>参数说明:</strong></p><ul><li><code>-c</code>：将解压缩的结果显示到屏幕上，并对字符做适当的转换。</li><li><code>-d directory</code>：指定解压缩后的文件存放目录。</li><li><code>-n</code>：更新现有的文件。</li><li><code>-t</code>：检查压缩文件是否正确，但不解压。</li><li><code>-v</code>：显示详细的信息。</li><li><code>zipfile</code>：要解压缩的 zip 文件。</li></ul><p><strong>解压到指定路径的示例:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -d /path/to/target/directory zipfile.zip</span><br></pre></td></tr></table></figure><p><strong>例如，要将 <code>myfile.zip</code> 解压缩到 <code>/home/user/data</code> 目录下，可以使用以下命令:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -d /home/user/data myfile.zip</span><br></pre></td></tr></table></figure><p><strong>注意:</strong></p><ul><li>如果要解压缩的 zip 文件名包含空格，则需要使用引号将文件名括起来。</li><li>如果目标目录不存在，则 <code>unzip</code> 命令会自动创建它。</li><li>如果目标目录中存在同名文件，则 <code>unzip</code> 命令会询问是否覆盖现有的文件。</li></ul><p><strong>其他用法:</strong></p><ul><li><strong>解压并显示内容:</strong></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -c zipfile.zip</span><br></pre></td></tr></table></figure><ul><li><strong>检查压缩文件是否正确:</strong></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -t zipfile.zip</span><br></pre></td></tr></table></figure><ul><li><strong>显示详细解压信息:</strong></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -v zipfile.zip</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Collections</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Collections/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Collections/</url>
+      
+        <content type="html"><![CDATA[<h4 id="Collections"><a href="#Collections" class="headerlink" title="Collections"></a>Collections</h4><ol><li><p>Collections.singletonList:</p><ol><li><p><strong>不可修改性</strong>:使用 <code>Collections.singletonList</code> 创建的列表是不可修改的，意味着你不能通过添加、删除或修改元素来改变列表。这在一些情况下是有益的，特别是当你希望传递一个只读的列表，以防止外部代码对列表进行修改。</p></li><li><p><strong>内存效率</strong>:在内部使用一个特殊的、只包含一个元素的列表实现，这可以提高内存效率，因为它不需要为存储多个元素而分配额外的内存。</p></li><li><p><strong>语义明确</strong>：可以使代码更加语义明确。当你知道列表只包含一个元素时，通过这个方法创建列表可以清晰地传达这个信息，提高代码的可读性。</p></li><li><p><strong>避免空指针异常</strong>：在某些情况下，如果你期望一个列表包含且仅包含一个元素，使用 <code>Collections.singletonList</code> 可以避免空指针异常。当传递一个期望非空列表的方法时，传递一个 <code>null</code> 值会导致空指针异常，而使用 <code>Collections.singletonList</code> 可以确保列表不为空。</p></li></ol></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>chmod</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/chmod/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/chmod/</url>
+      
+        <content type="html"><![CDATA[<h4 id="更改文件的9个属性"><a href="#更改文件的9个属性" class="headerlink" title="更改文件的9个属性"></a>更改文件的9个属性</h4><p>Linux文件属性有两种设置方法，一种是数字，一种是符号。</p><p>Linux 文件的基本权限就有九个，分别是 <strong>owner&#x2F;group&#x2F;others(拥有者&#x2F;组&#x2F;其他)</strong> 三种身份各有自己的 <strong>read&#x2F;write&#x2F;execute</strong> 权限。</p><p>先复习一下刚刚上面提到的数据：文件的权限字符为： -rwxrwxrwx ， 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：</p><table><thead><tr><th>r</th><th>4</th></tr></thead><tbody><tr><td>w</td><td>2</td></tr><tr><td>x</td><td>1</td></tr></tbody></table><p>每种身份(owner&#x2F;group&#x2F;others)各自的三个权限(r&#x2F;w&#x2F;x)分数是需要累加的，例如当权限为： -rwxrwx— 分数则是：</p><ul><li>owner &#x3D; rwx &#x3D; 4+2+1 &#x3D; 7</li><li>group &#x3D; rwx &#x3D; 4+2+1 &#x3D; 7</li><li>others&#x3D; — &#x3D; 0+0+0 &#x3D; 0</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>挂载Windows文件</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E6%8C%82%E8%BD%BDWindows%E6%96%87%E4%BB%B6/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E6%8C%82%E8%BD%BDWindows%E6%96%87%E4%BB%B6/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">使用场景：</span><br><span class="line">    现在需要读取 同一局域网下windows服务器共享文件夹中的文件，没挂载之前，由于本地测试时，</span><br><span class="line"> 后端在windows系统中运行，因此直接使用<span class="comment">//ip+路径的形式可以进行文件的读写操作；</span></span><br><span class="line">    然而，客户现场环境是Ubuntu系统，并不能直接找到对应的路径，因此需要挂载到linux中</span><br></pre></td></tr></table></figure><h6 id="1-windows如何共享文件夹"><a href="#1-windows如何共享文件夹" class="headerlink" title="1. windows如何共享文件夹"></a>1. windows如何共享文件夹</h6><p>选择一个文件夹，右击属性&#x3D;&#x3D;&gt;共享&#x3D;&#x3D;&gt;高级共享&#x3D;&#x3D;&gt;共享此文件夹</p><h6 id="2-Linux端挂载共享文件夹"><a href="#2-Linux端挂载共享文件夹" class="headerlink" title="2. Linux端挂载共享文件夹"></a>2. Linux端挂载共享文件夹</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t cifs -o username=Administrator,password=<span class="number">123456</span> //<span class="number">192.168</span><span class="number">.0</span><span class="number">.87</span>/task4 /mnt/</span><br></pre></td></tr></table></figure><p>命令解读：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mount：    挂载命令</span><br><span class="line">-t：    指定文件系统类型</span><br><span class="line">cifs：    CIFS 是一个新提出的协议，它使程序可以访问远程Internet计算机上的文件并要求此计算机提供服务。</span><br><span class="line">-o：    挂载选项参数，使用,分隔</span><br><span class="line">username：    用户名</span><br><span class="line">password：    用户密码</span><br><span class="line">//<span class="number">192.168</span><span class="number">.0</span><span class="number">.87</span>/task4 ：    源路径，共享文件夹主机的IP地址，以及共享的文件夹名称。（共享文件夹不需要填绝对路径）</span><br><span class="line">/mnt/：    目标路径，linux中的挂载目录。</span><br></pre></td></tr></table></figure><ol start="3"><li>彩晶示例：</li></ol><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount -t cifs -o username=Administrator,password=LUOBO62197bc. /<span class="number">192.168</span><span class="number">.1</span><span class="number">.26</span>/cjoe_interfacedata /mnt/</span><br></pre></td></tr></table></figure><p> 这行命令会将26服务器中的共享文件夹挂载到 &#x2F;mnt&#x2F;中</p><h6 id="关于挂载共享文件夹的报错解决"><a href="#关于挂载共享文件夹的报错解决" class="headerlink" title="关于挂载共享文件夹的报错解决"></a>关于挂载共享文件夹的报错解决</h6><p>1.关闭windows防火墙</p><p>2.确认windows的CIFS文件共享功能是否开启</p><p>  启动或关闭Windows功能-SMB 1.0&#x2F;CIFS 文件共享支持</p><p>3.检查源路径与挂载路径是否正确<br>  注意IP地址是否正确，其次注意格式，源路径是IP&#x2F;共享文件夹。</p><p>  目标路径的话，要注意路径是否存在，是否已经被挂载的问题。</p><p>4.检查用户名及密码是否正确<br>  用户名严格要求大小写，不管是用户名还是密码，错一个都会报错。</p><p>5.检查共享文件夹权限<br>  使用时权限拒绝，那么大概就跟这个有关，默认是只读权限，需要手动修改。</p><p>6.查看Linux中是否安装cifs-utils<br>  如果没有这个的话，挂载也可能会失败。apt show cifs-utils</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>777背景</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%8E%BB%E6%8E%89777%E7%9A%84%E8%83%8C%E6%99%AF/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%8E%BB%E6%8E%89777%E7%9A%84%E8%83%8C%E6%99%AF/</url>
+      
+        <content type="html"><![CDATA[<p><code>dircolors &gt;&gt; ~/.bashrc</code></p><p><code>nano ~/.bashrc</code> &#96;</p><p>找到<code>ow=34;42</code>，删除<code>;42</code></p><p>重新进入终端</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JSONObject</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/JSONObject/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/JSONObject/</url>
+      
+        <content type="html"><![CDATA[<h4 id="将String转换为JSONObject对象，从JSONObject获取JSON对象，然后从JSON对象中获取JSON数组"><a href="#将String转换为JSONObject对象，从JSONObject获取JSON对象，然后从JSON对象中获取JSON数组" class="headerlink" title="将String转换为JSONObject对象，从JSONObject获取JSON对象，然后从JSON对象中获取JSON数组"></a>将String转换为JSONObject对象，从JSONObject获取JSON对象，然后从JSON对象中获取JSON数组</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> erpHttpRequest.syncMaterialFromErp(startTime);</span><br><span class="line"><span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> JSONObject.parseObject(response);</span><br><span class="line"><span class="type">JSONArray</span> <span class="variable">jsonArray</span> <span class="operator">=</span> jsonObject.getJSONObject(<span class="string">&quot;BillData&quot;</span>).getJSONArray(<span class="string">&quot;Data&quot;</span>);</span><br></pre></td></tr></table></figure><p>这段代码的作用是通过进行 ERP HTTP 请求来获取响应，并将响应解析为 JSON 对象和 JSON 数组。</p><p>具体解释如下：</p><ul><li><code>erpHttpRequest.syncMaterialFromErp(startTime)</code>: 这是一个 ERP HTTP 请求的方法调用，用于从 ERP 系统中同步材料数据。根据代码上下文，它接受一个 <code>startTime</code> 参数，表示同步的起始时间，并返回一个字符串类型的响应。</li><li><code>String response = erpHttpRequest.syncMaterialFromErp(startTime)</code>: 这是将 ERP HTTP 请求的响应赋值给字符串变量 <code>response</code>。</li><li><code>JSONObject jsonObject = JSONObject.parseObject(response)</code>: 这是使用 fastjson 库将 <code>response</code> 字符串解析为 JSON 对象的操作。<code>JSONObject.parseObject()</code> 方法将传入的 JSON 字符串解析为一个 <code>JSONObject</code> 对象。</li><li><code>jsonObject.getJSONObject(&quot;BillData&quot;)</code>: 这是从 <code>jsonObject</code> 中获取名为 “BillData” 的 JSON 对象。</li><li><code>.getJSONArray(&quot;Data&quot;)</code>: 这是从 “BillData” JSON 对象中获取名为 “Data” 的 JSON 数组。</li></ul><ol><li><p>将JSON格式的String转换成Set</p><p>需求描述：协助人在数据库中保存的格式是内容为    <code>[&quot;900670287014526977&quot;,&quot;900670813806526464&quot;]</code>的字符串，现在需要将负责人和协助人的id都拿出来，并且这两个字段可能重复</p><p>解决方案：使用Gson对协助人字段进行解析，转换成<code>set</code>，然后将负责人add</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">                   <span class="comment">//获取协助人</span></span><br><span class="line"><span class="type">String</span> <span class="variable">helper</span> <span class="operator">=</span> rpmsProjectItem.getHelper();</span><br><span class="line"><span class="comment">//获取负责人</span></span><br><span class="line"><span class="type">String</span> <span class="variable">principal</span> <span class="operator">=</span> rpmsProjectItem.getPrincipal();</span><br><span class="line"><span class="comment">// 使用 Gson 来解析 JSON</span></span><br><span class="line"><span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line"><span class="comment">// 创建 Type 对象，表示 Set&lt;String&gt; 的类型</span></span><br><span class="line"><span class="type">Type</span> <span class="variable">setType</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TypeToken</span>&lt;Set&lt;String&gt;&gt;() &#123;</span><br><span class="line">&#125;.getType();</span><br><span class="line"><span class="comment">// 将 JSON 字符串转换为 Set&lt;String&gt;</span></span><br><span class="line">Set&lt;String&gt; stringSet = gson.fromJson(helper, setType);</span><br><span class="line">stringSet.add(principal);</span><br></pre></td></tr></table></figure><p>其中，<code>Type setType = new TypeToken&lt;Set&lt;String&gt;&gt;() &#123;&#125;.getType();</code>：创建 <code>TypeToken</code> 的匿名内部类，其中泛型参数指定了要获取的类型信息，即 <code>Set&lt;String&gt;</code>。通过 <code>.getType()</code> 方法获取 <code>Type</code> 对象，该对象包含了 <code>Set&lt;String&gt;</code> 的具体类型信息。</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>新增root密码</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E6%96%B0%E5%A2%9Eroot%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E6%96%B0%E5%A2%9Eroot%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81/</url>
+      
+        <content type="html"><![CDATA[<p>运行此命令后需要先输入用户密码，然后输入两次root密码</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo passwd root</span><br></pre></td></tr></table></figure><p>测试：输入root密码，切换为root</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ su -</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>bean字典</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/bean%E5%AD%97%E5%85%B8/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/bean%E5%AD%97%E5%85%B8/</url>
+      
+        <content type="html"><![CDATA[<ol><li><h6 id="bean字典参数判空常规写法，抛出自定义异常RppmBizException"><a href="#bean字典参数判空常规写法，抛出自定义异常RppmBizException" class="headerlink" title="bean字典参数判空常规写法，抛出自定义异常RppmBizException"></a>bean字典参数<mark>判空</mark>常规写法，抛出自定义异常RppmBizException</h6></li></ol><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">projectId</span> <span class="operator">=</span> (String) params.get(<span class="string">&quot;project_id&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (StringUtils.isBlank(projectId)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RppmBizException</span>(<span class="number">500</span>, <span class="string">&quot;项目id不能为空&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ol start="2"><li><h6 id="bean字典使用dictAttrs-在数据字典生成属性"><a href="#bean字典使用dictAttrs-在数据字典生成属性" class="headerlink" title="bean字典使用dictAttrs()在数据字典生成属性"></a>bean字典使用dictAttrs()在<mark>数据字典生成属性</mark></h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;MaiBeanDictionaryAttr&gt; <span class="title function_">dictAttrs</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Arrays.asList(MaiBeanDictionaryAttr.getBuilder().name(<span class="string">&quot;id&quot;</span>).refName(<span class="string">&quot;id&quot;</span>).varchar().data().build(),</span><br><span class="line">                MaiBeanDictionaryAttr.getBuilder().name(<span class="string">&quot;姓名&quot;</span>).refName(<span class="string">&quot;name&quot;</span>).varchar().data().build(),</span><br><span class="line">                MaiBeanDictionaryAttr.getBuilder().name(<span class="string">&quot;年龄&quot;</span>).refName(<span class="string">&quot;age&quot;</span>).doubleT().data().build());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li></ol><p>    其中，<code>.name()</code>方法对应属性的逻辑名称，<code>.refName()</code>方法对应物理名称，<code>.varchar()</code>或<code>.doubleT()</code>代表属性的类型，<code>.data()</code>表示只生成属性而不生成参数，还有一个<code>.dataAndParam()</code>方法，表示生成属性和参数</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>log</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/log/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/log/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br></pre></td></tr></table></figure><p>在java类中使用以上注解，即可在代码中使用<code>log.info()</code>的方式在日志中输出内容</p><p>根据给定的代码片段：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log.info(<span class="string">&quot;yacoo login response loginUser = &#123;&#125;&quot;</span>, loginUser);</span><br></pre></td></tr></table></figure><p>这是一条使用日志记录工具（例如 Log4j、Logback 等）输出日志的语句，用于在日志中记录关于登录响应的信息。</p><p>解释该代码的含义如下：</p><ul><li><code>log</code>: 这是一个日志记录器对象，用于记录日志信息。它通常是通过在类中声明一个 <code>private static final Logger log = LoggerFactory.getLogger(ClassName.class);</code> 的方式创建并初始化的。<code>ClassName</code> 是使用该日志记录器的类名。</li><li><code>info</code>: 这是日志记录级别之一，表示记录信息级别的日志。通常的日志级别包括 <code>trace</code>、<code>debug</code>、<code>info</code>、<code>warn</code> 和 <code>error</code>，按照严重程度递增。</li><li><code>&quot;yacoo login response loginUser = &#123;&#125;&quot;</code>: 这是要输出到日志的消息模板。其中的 <code>&#123;&#125;</code> 是一个占位符，用于将后面的变量或表达式的值填充到该位置。</li><li><code>loginUser</code>: 这是一个变量或表达式，表示要填充到日志消息模板中的值。根据代码的上下文，它可能是一个表示登录用户的对象或字符串。</li></ul><p>因此，该代码的作用是将一个关于登录响应的信息记录到日志中。通过占位符 <code>&#123;&#125;</code>，将变量 <code>loginUser</code> 的值填充到日志消息中，以便在日志中显示该登录用户的信息。这样做可以帮助开发者在调试或追踪程序时了解登录响应的详细信息。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>导入sql</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/%E5%AF%BC%E5%85%A5sql/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/%E5%AF%BC%E5%85%A5sql/</url>
+      
+        <content type="html"><![CDATA[<p>mysql导入dump.sql</p><p>报错：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[ERR] <span class="number">1153</span> <span class="operator">-</span> Got a packet bigger than <span class="string">&#x27;max_allowed_packet&#x27;</span> bytes</span><br><span class="line">[ERR] <span class="comment">-- MySQL dump 10.13  Distrib 8.0.33, for Linux (x86_64)</span></span><br></pre></td></tr></table></figure><ul><li>“max_allowed_packet” 是一个MySQL数据库中的参数，用于设置单个数据包的最大大小。它指定了MySQL服务器接受的最大数据包的大小限制。如果要将其翻译成简体中文，可以译为”最大允许数据包大小”。</li></ul><p>解决方案：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> max_allowed_packet <span class="operator">=</span> <span class="number">5</span> <span class="operator">*</span> <span class="number">1024</span> <span class="operator">*</span> <span class="number">1024</span> <span class="operator">*</span> <span class="number">1024</span></span><br></pre></td></tr></table></figure><ul><li>这个语句设置了最大允许数据包大小为5GB。</li></ul><p>数据库类型为text，使用mybatis查询时需要用selectByExampleWithBLOBs()</p><h4 id="DBeaver转储数据执行脚本失败"><a href="#DBeaver转储数据执行脚本失败" class="headerlink" title="DBeaver转储数据执行脚本失败"></a>DBeaver转储数据执行脚本失败</h4><p><code>使用额外命令   --default-character-set=utf8</code></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>stream流</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/stream%E6%B5%81/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/stream%E6%B5%81/</url>
+      
+        <content type="html"><![CDATA[<h4 id="Stream流的skip方法"><a href="#Stream流的skip方法" class="headerlink" title="Stream流的skip方法"></a>Stream流的skip方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//分页显示</span></span><br><span class="line">List&lt;Map&lt;String, Object&gt;&gt; resultList = list.stream().skip((<span class="type">long</span>) pageSize * (pageNo - <span class="number">1</span>)).limit(pageSize).collect(Collectors.toList());</span><br></pre></td></tr></table></figure><ul><li><code>skip(lang n)</code> 是一个跳过前 <code>n</code> 个元素的中间流操作，<code>skip()</code>方法用于跳过前面n个元素，然后再返回新的流</li></ul><p>​        （1）当<code>n&lt;0</code>时，抛<code>IllegalArgumentException</code>异常；</p><p>​        （2）当<code>n=0</code>时，相当没有跳过任何元素，原封不动、完璧归赵；</p><p>​        （3）当<code>0&lt;n&lt;length</code>时，跳过n个元素后，返回含有剩下的元素的流；</p><p>​        （4）当<code>n&gt;=length</code>时，跳过所有元素，返回空流。</p><ul><li><p>对于<code>limit()</code>方法，它是用于限制流中元素的个数，即取前n个元素，返回新的流</p><p>（1）当<code>n&lt;0</code>时，抛<code>IllegalArgumentException</code>异常；</p><p>（2）当<code>n=0</code>时，不取元素，返回空流；</p><p>（3）当<code>0&lt;n&lt;length</code>时，取前n个元素，返回新的流；</p><p>（4）当<code>n&gt;=length</code>时，取所有元素，原封不动、完璧归赵。</p></li></ul><p>但是它们有一些区别 <code>skip</code> 操作必须时刻监测流中元素的状态。才能判断是否需要丢弃。所以 <code>skip</code> 属于状态操作。</p><p>而 <code>limit</code> 只关心截取的是不是其参数 <code>maxsize</code> （最大区间值），其它毫不关心。一旦达到就立马中断操作返回流。所以 <code>limit</code> 属于一个中断操作。</p><h4 id="Stream流的toMap方法"><a href="#Stream流的toMap方法" class="headerlink" title="Stream流的toMap方法"></a>Stream流的toMap方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SysTemplateData&gt; sysTemplateData =</span><br><span class="line">   sysTemplateDataMapper.selectByExample(sysTemplateDataExample);</span><br><span class="line">Map&lt;String, SysTemplateData&gt; templateDataMap =</span><br><span class="line">   sysTemplateData.stream()</span><br><span class="line">    .collect(Collectors.toMap(one -&gt; one.getValue(), one -&gt; one));</span><br></pre></td></tr></table></figure><ul><li><code>one -&gt; one.getValue()</code>：指定了作为键的属性。对于每个 <code>SysTemplateData</code> 对象，这里使用 <code>getValue()</code> 方法作为键。</li><li><code>one -&gt; one</code>：指定了作为值的属性。每个 <code>SysTemplateData</code> 对象本身作为值。</li></ul><p>最终，得到的 <code>templateDataMap</code> 就是一个 <code>Map</code>，其中键是 <code>SysTemplateData</code> 对象的 <code>value</code> 属性，值是对应的 <code>SysTemplateData</code> 对象。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;K, V&gt; <span class="title function_">toMap</span><span class="params">(Function&lt;? <span class="built_in">super</span> T, ? extends K&gt; keyMapper,</span></span><br><span class="line"><span class="params">               Function&lt;? <span class="built_in">super</span> T, ? extends V&gt; valueMapper)</span>;</span><br></pre></td></tr></table></figure><ul><li><code>keyMapper</code> 是一个函数，用于将 Stream 中的元素映射为 Map 的键。</li><li><code>valueMapper</code> 是一个函数，用于将 Stream 中的元素映射为 Map 的值。</li></ul><p>如果存在重复的键（即两个人有相同的名字），<code>toMap</code> 方法默认会抛出 <code>IllegalStateException</code>。为了解决这个问题，我们可以提供一个<code>合并函数</code>，例如：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Integer&gt; nameToAgeMap = people.stream()</span><br><span class="line"> .collect(Collectors.toMap(</span><br><span class="line"> person -&gt; person.getName(),</span><br><span class="line"> person -&gt; person.getAge(),</span><br><span class="line"> (existing, replacement) -&gt; existing <span class="comment">// 合并函数，选择保留已存在的值 ));</span></span><br></pre></td></tr></table></figure><h4 id="Stream流结合Collectors使用"><a href="#Stream流结合Collectors使用" class="headerlink" title="Stream流结合Collectors使用"></a>Stream流结合Collectors使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;PFormulaDetail&gt; uniqueFormulaDetail = pFormulaDetails.stream()</span><br><span class="line">            .collect(Collectors.collectingAndThen(</span><br><span class="line">                    Collectors.toCollection(() -&gt; </span><br><span class="line">                      <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;&gt;(Comparator.comparing(PFormulaDetail::getCode))),</span><br><span class="line">                    ArrayList::<span class="keyword">new</span>));));</span><br></pre></td></tr></table></figure><ul><li><p>使用.stream()将列表转换成一个流</p></li><li><p><code>Collectors.toCollection(() -&gt; new TreeSet&lt;&gt;(Comparator.comparing(PFormulaDetail::getCode)))</code>：</p><ul><li><p>使用<code>Collectors.toCollection</code>将Stream中的元素收集到一个集合中。</p><ul><li>在这里，集合的类型是<code>TreeSet</code>，它是有序的且不允许重复元素的集合。</li><li>通过传递一个<code>Comparator</code>，指定根据<code>PFormulaDetail</code>对象的<code>getCode</code>属性进行比较，从而实现自定义比较逻辑。</li></ul></li><li><p><code>Collectors.collectingAndThen(..., ArrayList::new)</code>：</p><ul><li>使用<code>Collectors.collectingAndThen</code>包装前面的收集器，它接受两个参数：前一个收集器和一个转换函数。</li><li>前一个收集器是去重的<code>TreeSet</code>，然后通过转换函数将其转换为<code>ArrayList</code>，这样得到的<code>ArrayList</code>就是去重后的<code>pFormulaDetails</code>列表。</li></ul></li></ul></li></ul><h4 id="Stream流中的filter方法"><a href="#Stream流中的filter方法" class="headerlink" title="Stream流中的filter方法"></a>Stream流中的filter方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">comp</span> <span class="operator">=</span> components.stream().filter(item -&gt; &#123;</span><br><span class="line">    <span class="type">JSONObject</span> <span class="variable">obj</span> <span class="operator">=</span> (JSONObject) item;</span><br><span class="line">    <span class="keyword">return</span> materialCode.equals(obj.get(<span class="string">&quot;componentsId&quot;</span>));</span><br><span class="line">&#125;).findAny().orElse(<span class="literal">null</span>);</span><br></pre></td></tr></table></figure><ul><li><p><code>filter(item -&gt; &#123;...&#125;)</code>：使用<code>filter</code>方法对流中的元素进行筛选，保留符合条件的元素。</p><ul><li>通过Lambda表达式，将<code>item</code>强制转换为<code>JSONObject</code>，然<br>后检查其<code>componentsId</code>属性是否与给定的<code>materialCode</code>相等 。</li></ul></li><li><p><code>findAny()</code>：返回流中的任意一个元素，如果流为空则返回空。由于使用了<code>filter</code>进行了筛选，这里找到的元素就是符合条件的任意一个元素。</p></li><li><p><code>orElse(null)</code>：如果找到符合条件的元素，返回该元素；如果没有找到，则返回<code>null</code></p></li></ul><h4 id="compareTo-方法"><a href="#compareTo-方法" class="headerlink" title="compareTo()方法"></a>compareTo()方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(BigDecimal val)</span></span><br></pre></td></tr></table></figure><p>这个方法返回一个整数值，其含义如下：</p><ul><li>如果当前对象小于 <code>val</code>，则返回负整数。</li><li>如果当前对象等于 <code>val</code>，则返回零。</li><li>如果当前对象大于 <code>val</code>，则返回正整数。</li></ul><p>这样的比较是基于数值的大小而不是对象的引用。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>后端表格</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/%E5%90%8E%E7%AB%AF%E8%A1%A8%E6%A0%BC/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/%E5%90%8E%E7%AB%AF%E8%A1%A8%E6%A0%BC/</url>
+      
+        <content type="html"><![CDATA[<ul><li><h3 id="使用bean字典的作为后端表格的数据源"><a href="#使用bean字典的作为后端表格的数据源" class="headerlink" title="使用bean字典的作为后端表格的数据源"></a>使用bean字典的作为后端表格的数据源</h3><ul><li>注意点：直接将外层的JSONObject对象 data 作为new Pager()的参数，不需要去新建一个result的JSONObject对象，注意是否有分页需求</li></ul></li></ul><img src="C:\Users\25288\AppData\Roaming\Typora\typora-user-images\image-20231007102747744.png" alt="image-20231007102747744" style="zoom: 80%;" /><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//重写bean字典的dictQuery方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Pager <span class="title function_">dictQuery</span><span class="params">(Map&lt;String, Object&gt; params)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;测试后端表格&quot;</span>);</span><br><span class="line">        <span class="comment">//创建列的JSONArray</span></span><br><span class="line">        <span class="type">JSONArray</span> <span class="variable">columns</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONArray</span>();</span><br><span class="line">        <span class="comment">//包含表头和数据索引</span></span><br><span class="line">        columns.add(createColumn(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;姓名&quot;</span>,<span class="string">&quot;dataIndex&quot;</span>, <span class="string">&quot;grid_name&quot;</span>));</span><br><span class="line">        columns.add(createColumn(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;年龄&quot;</span>,<span class="string">&quot;dataIndex&quot;</span>, <span class="string">&quot;grid_age&quot;</span>));</span><br><span class="line">        columns.add(createColumn(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;生日&quot;</span>,<span class="string">&quot;dataIndex&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>));</span><br><span class="line">        <span class="comment">//创建表格中数据的JSONArray</span></span><br><span class="line">        <span class="type">JSONArray</span> <span class="variable">data</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONArray</span>();</span><br><span class="line">        <span class="comment">//每一行包含数据索引 以及对应的值，即为 数据索引，数据值 的键值对</span></span><br><span class="line">        data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;张三&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>,<span class="string">&quot;grid_id&quot;</span>,<span class="string">&quot;11&quot;</span>));</span><br><span class="line">        data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;李四&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>, <span class="string">&quot;grid_id&quot;</span>, <span class="string">&quot;12&quot;</span>));</span><br><span class="line">        data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;王五&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>, <span class="string">&quot;grid_id&quot;</span>, <span class="string">&quot;13&quot;</span>));</span><br><span class="line">        data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;赵六&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>, <span class="string">&quot;grid_id&quot;</span>, <span class="string">&quot;15&quot;</span>));</span><br><span class="line">        <span class="comment">//创建外层的JSONObject对象resdata</span></span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">resdata</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        resdata.put(<span class="string">&quot;data&quot;</span>, data);</span><br><span class="line">        resdata.put(<span class="string">&quot;columns&quot;</span>, columns);</span><br><span class="line">        <span class="comment">//直接将resdata作为result，创建Pager对象，根据分页需求设置对应的size,No,count</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Pager</span>(resdata,<span class="number">10</span>,<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//创建后端表格数据列的方法</span></span><br><span class="line"><span class="keyword">private</span> JSONObject <span class="title function_">createColumn</span><span class="params">(String ... key)</span> &#123;</span><br><span class="line">        <span class="type">JSONObject</span> <span class="variable">object</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; key.length; i+=<span class="number">2</span>) &#123;</span><br><span class="line">            object.put(key[i], key[i+<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> object;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><ul><li><h3 id="使用http字典的作为后端表格的数据源"><a href="#使用http字典的作为后端表格的数据源" class="headerlink" title="使用http字典的作为后端表格的数据源"></a>使用http字典的作为后端表格的数据源</h3></li></ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/data&quot;)</span></span><br><span class="line"><span class="keyword">public</span> JSONResult <span class="title function_">getData</span><span class="params">(String parameterValue,</span></span><br><span class="line"><span class="params">                          String dataSourceInfo,</span></span><br><span class="line"><span class="params">                          Integer startPage,</span></span><br><span class="line"><span class="params">                          Integer pageSize)</span>&#123;</span><br><span class="line">    <span class="type">JSONArray</span> <span class="variable">columns</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONArray</span>();</span><br><span class="line">    columns.add(createColumn(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;姓名&quot;</span>,<span class="string">&quot;dataIndex&quot;</span>, <span class="string">&quot;grid_name&quot;</span>));</span><br><span class="line">    columns.add(createColumn(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;年龄&quot;</span>,<span class="string">&quot;dataIndex&quot;</span>, <span class="string">&quot;grid_age&quot;</span>));</span><br><span class="line">    columns.add(createColumn(<span class="string">&quot;title&quot;</span>,<span class="string">&quot;生日&quot;</span>,<span class="string">&quot;dataIndex&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>));</span><br><span class="line">    <span class="type">JSONArray</span> <span class="variable">data</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONArray</span>();</span><br><span class="line">    data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;张三&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>,<span class="string">&quot;grid_id&quot;</span>,<span class="string">&quot;11&quot;</span>));</span><br><span class="line">    data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;李四&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>, <span class="string">&quot;grid_id&quot;</span>, <span class="string">&quot;12&quot;</span>));</span><br><span class="line">    data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;王五&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>, <span class="string">&quot;grid_id&quot;</span>, <span class="string">&quot;13&quot;</span>));</span><br><span class="line">    data.add(createColumn(<span class="string">&quot;grid_name&quot;</span>, <span class="string">&quot;赵六&quot;</span>, <span class="string">&quot;grid_age&quot;</span>,<span class="string">&quot;12&quot;</span>, <span class="string">&quot;grid_birthday&quot;</span>,<span class="string">&quot;2000-10-01&quot;</span>, <span class="string">&quot;grid_id&quot;</span>, <span class="string">&quot;15&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="type">JSONObject</span> <span class="variable">resdata</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">    resdata.put(<span class="string">&quot;data&quot;</span>, data);</span><br><span class="line">    resdata.put(<span class="string">&quot;columns&quot;</span>, columns);</span><br><span class="line">    <span class="type">JSONObject</span> <span class="variable">res</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">    res.put(<span class="string">&quot;data&quot;</span>, resdata);</span><br><span class="line">    res.put(<span class="string">&quot;totalCount&quot;</span>, <span class="number">10</span>);</span><br><span class="line">    res.put(<span class="string">&quot;pageNo&quot;</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">JSONResult</span>().setResult(res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> JSONObject <span class="title function_">createColumn</span><span class="params">(String ... key)</span> &#123;</span><br><span class="line">    <span class="type">JSONObject</span> <span class="variable">object</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; key.length; i+=<span class="number">2</span>) &#123;</span><br><span class="line">        object.put(key[i], key[i+<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Axios</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/Axios/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/Axios/</url>
+      
+        <content type="html"><![CDATA[<h3 id="Axios"><a href="#Axios" class="headerlink" title="Axios"></a>Axios</h3><p>Axios是一个基于Promise的HTTP库，可以用在浏览器和node.js中</p><h3 id="安装方法"><a href="#安装方法" class="headerlink" title="安装方法"></a>安装方法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add axios</span><br></pre></td></tr></table></figure><h3 id="GET方法"><a href="#GET方法" class="headerlink" title="GET方法"></a>GET方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">axios</span><br><span class="line">    .<span class="title function_">get</span>(<span class="variable constant_">URL</span>)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> (<span class="variable language_">this</span>.<span class="property">info</span> = response))</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err))</span><br></pre></td></tr></table></figure><p>GET方法传递参数的格式：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接在 URL 上添加参数 ID=12345</span></span><br><span class="line">axios.<span class="title function_">get</span>(<span class="string">&#x27;/user?ID=12345&#x27;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response);</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以通过 params 设置参数：</span></span><br><span class="line">axios.<span class="title function_">get</span>(<span class="string">&#x27;/user&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">params</span>: &#123;</span><br><span class="line">      <span class="attr">ID</span>: <span class="number">12345</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response);</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure><h3 id="POST方法"><a href="#POST方法" class="headerlink" title="POST方法"></a>POST方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">axios</span><br><span class="line">      .<span class="title function_">post</span>(<span class="string">&#x27;https://www.runoob.com/try/ajax/demo_axios_post.php&#x27;</span>)</span><br><span class="line">      .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> (<span class="variable language_">this</span>.<span class="property">info</span> = response))</span><br><span class="line">      .<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">error</span>) &#123; <span class="comment">// 请求失败处理</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure><p>POST 方法传递参数格式如下：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">post</span>(<span class="string">&#x27;/user&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&#x27;Fred&#x27;</span>,        <span class="comment">// 参数 firstName</span></span><br><span class="line">    <span class="attr">lastName</span>: <span class="string">&#x27;Flintstone&#x27;</span>    <span class="comment">// 参数 lastName</span></span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response);</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure><h3 id="Axios-API"><a href="#Axios-API" class="headerlink" title="Axios API"></a>Axios API</h3><p>可以通过向axios传递相关配置来创建请求</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>列表渲染</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>    v-for命令</p><p>其中item代表items中的元素，index是元素的索引</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul id=<span class="string">&quot;example-2&quot;</span>&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&quot;(item, index) in items&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &#123;&#123; parentMessage &#125;&#125; - &#123;&#123; index &#125;&#125; - &#123;&#123; item.message &#125;&#125;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></li><li><p>可以使用v-for遍历对象</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;p&gt;使用v-<span class="keyword">for</span>遍历object对象&lt;/p&gt;</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&quot;value in object&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;value&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;&#123; value &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//新建一个对象</span></span><br><span class="line">      <span class="attr">object</span>: &#123;</span><br><span class="line">        <span class="attr">title</span>: <span class="string">&#x27;title&#x27;</span>,</span><br><span class="line">        <span class="attr">author</span>: <span class="string">&#x27;cxl&#x27;</span>,</span><br><span class="line">        <span class="attr">msg</span>: <span class="string">&#x27;msg&#x27;</span>   &#125;,</span><br></pre></td></tr></table></figure></li><li><p>v-for可以有三个参数，其中第一个位置为对象的value（值，即title、cxl和msg），第二个位置为对象的key（也就是上面的title、author和msg），第三个位置为索引，注意顺序<code>value,key,index</code></p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-for</span>=<span class="string">&quot;(value, name, index) in object&quot;</span>&gt;</span></span><br><span class="line">&#123;&#123; index &#125;&#125;. &#123;&#123; name &#125;&#125;: &#123;&#123; value &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ant design</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/cli+ant%20design/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/cli+ant%20design/</url>
+      
+        <content type="html"><![CDATA[<h4 id="使用vue-cli创建ant-design项目"><a href="#使用vue-cli创建ant-design项目" class="headerlink" title="使用vue-cli创建ant-design项目"></a>使用vue-cli创建ant-design项目</h4><ol><li><p>查看vue-cli版本，使用vue -V</p></li><li><p>创建新项目<code>vue create ant-demo</code>，并进行自定义配置</p></li><li><p>引入ant-design，使用<code>yarn add ant-design-vue</code>,如果使用vue2，则需要安装ant-design的1版本，使用如下命令<code>yarn add ant-design-vue@1.7.8</code></p></li><li><p>全局引入样式</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&quot;./App.vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&quot;./router&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">&quot;./store&quot;</span>;</span><br><span class="line"><span class="comment">// 新增代码：引入全部组件及样式</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Antd</span> <span class="keyword">from</span> <span class="string">&#x27;ant-design-vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;ant-design-vue/dist/antd.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新增代码：注册全部组件</span></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Antd</span>)</span><br><span class="line"><span class="title class_">Vue</span>.<span class="property">config</span>.<span class="property">productionTip</span> = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  router,</span><br><span class="line">  store,</span><br><span class="line">  <span class="attr">render</span>: <span class="function"><span class="params">h</span> =&gt;</span> <span class="title function_">h</span>(<span class="title class_">App</span>)</span><br><span class="line">&#125;).$mount(<span class="string">&quot;#app&quot;</span>);</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Object.assign方法</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/Object.assign/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/Object.assign/</url>
+      
+        <content type="html"><![CDATA[<h5 id="Object-assign方法"><a href="#Object-assign方法" class="headerlink" title="Object.assign方法"></a>Object.assign方法</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> param = <span class="title class_">Object</span>.<span class="title function_">assign</span>(sqp, <span class="variable language_">this</span>.<span class="property">queryParam</span>, <span class="variable language_">this</span>.<span class="property">isorter</span>, <span class="variable language_">this</span>.<span class="property">filters</span>);</span><br></pre></td></tr></table></figure><ol><li><p><code>Object.assign</code> 方法接收一个目标对象（第一个参数）和一个或多个源对象，然后将源对象的属性复制到目标对象中。在这里，<code>sqp</code> 是目标对象，而 <code>this.queryParam</code>、<code>this.isorter</code>、<code>this.filters</code> 是源对象。</p></li><li><p>属性合并：<code>param</code> 变量最终保存了所有源对象的属性合并到 <code>sqp</code> 中的结果。如果有相同属性名的情况，后面的源对象的属性将覆盖前面的。</p><p>例如，如果 <code>this.queryParam</code> 有属性 <code>&#123; key1: &#39;value1&#39; &#125;</code>，而 <code>sqp</code> 也有属性 <code>&#123; key1: &#39;originalValue&#39; &#125;</code>，那么最终的 <code>param</code> 中 <code>key1</code> 的值将是 <code>&#39;value1&#39;</code>。</p></li><li><p>返回值：<code>Object.assign</code> 方法的返回值是目标对象，也就是 <code>sqp</code>，并且 <code>param</code> 也引用了这个目标对象。</p></li></ol><p>这样一来，<code>param</code> 对象包含了 <code>sqp</code>、<code>this.queryParam</code>、<code>this.isorter</code>、<code>this.filters</code> 中所有属性的合并结果。这种操作通常用于合并多个对象的属性，方便进行一次性的参数配置或传递。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>form</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/form/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/form/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p><code>@submit.native.prevent</code>是 Vue 中的事件修饰符的使用语法。这特定的修饰符结合了两个部分：<code>@submit</code> 和 <code>.native.prevent</code>。</p></li><li><p><code>.native</code>是一个特殊修饰符，用于在父组件上监听子组件触发的原生事件</p></li><li><p><code>.prevent</code>是阻止事件的默认行为的修饰符，即<code>event.preventDefault()</code></p></li><li><p><code>@submit.native.prevent</code>作用：在表单提交事件上阻止默认行为，即防止表单提交刷新页面。对于在Vue中处理表单提交而不刷新整个页面有用。</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>父子组件传参</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E5%8F%82/</url>
+      
+        <content type="html"><![CDATA[<h5 id="子组件的引入"><a href="#子组件的引入" class="headerlink" title="子组件的引入"></a>子组件的引入</h5><ul><li>新建Helloworld.vue页面，在export default中加入props,用于接收从父组件中传过来的message数据</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">props</span>:&#123;</span><br><span class="line">    <span class="attr">message</span>:&#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="title class_">Object</span>,</span><br><span class="line">      <span class="attr">required</span>: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure><ul><li>父组件App.vue使用<code>import HelloWorld from &quot;@/components/HelloWorld&quot;;</code>引入子组件，并且在export default中增加&#96;</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">string</span>: <span class="string">&quot;ssss&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">components</span>: &#123;</span><br><span class="line">    <span class="title class_">HelloWorld</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>使用子组件</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">HelloWorld</span>  <span class="attr">:message</span>=<span class="string">&quot;string&quot;</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;./assets/logo.png&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;logo&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123; string &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span></span><br></pre></td></tr></table></figure><ul><li><p>使用:message &#x3D; “string”，将父组件的string属性绑定给子组件的message</p></li><li><p>子组件中显示父组件的message属性</p></li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  &lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>这是父组件的 message: &#123;&#123;message&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure><h5 id="Prop验证"><a href="#Prop验证" class="headerlink" title="Prop验证"></a>Prop验证</h5><ul><li><p>组件可以为props指定验证要求，为了定制prop的验证方式，可以为props中的值提供一个带有验证需求的对象，而不是一个字符串数组。例如：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Vue</span>.<span class="title function_">component</span>(<span class="string">&#x27;my-component&#x27;</span>,&#123;</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">    <span class="attr">propA</span>: number,</span><br><span class="line">    <span class="attr">propB</span>: [<span class="title class_">String</span>,<span class="title class_">Number</span>],</span><br><span class="line">    <span class="attr">propC</span>: &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="title class_">String</span>,</span><br><span class="line">      <span class="attr">required</span>: <span class="literal">true</span>  </span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">propD</span>: &#123;</span><br><span class="line">      type=<span class="title class_">Number</span>,</span><br><span class="line">      <span class="attr">default</span>: <span class="number">100</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li><li><p>当prop验证失败时，Vue将会产生一个控制台的警告</p></li></ul><h5 id="自定义事件"><a href="#自定义事件" class="headerlink" title="自定义事件"></a>自定义事件</h5><ul><li><p>父组件是使用props传递数据给子组件，但如果子组件要把数据传递回去，就需要使用自定义事件。</p></li><li><p>使用<code>$emit</code>触发事件</p></li><li><p>父组件可以在使用子组件的地方直接用<code>v-on</code>来监听子组件触发的事件</p></li></ul><p>    <mark>注意：data必须是一个函数</mark></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>新平台练习</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%96%B0%E5%B9%B3%E5%8F%B0/%E6%96%B0%E5%B9%B3%E5%8F%B0%E7%BB%83%E4%B9%A0/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%96%B0%E5%B9%B3%E5%8F%B0/%E6%96%B0%E5%B9%B3%E5%8F%B0%E7%BB%83%E4%B9%A0/</url>
+      
+        <content type="html"><![CDATA[<ul><li><p><input checked="" disabled="" type="checkbox"> 练习一：设计一个流程 包含全节点类型（固定、动态、候选组、会签，抄送）节点，并能正常启动走完整个流程<br>练习二：配置一个工作流权限控制如何配置，（在flowable.zip视频资料中有）    工作流练习1：cxl测试工作流    工作流练习2：cxl工作流权限发起</p></li><li><p><input checked="" disabled="" type="checkbox"> 练习：设计一个仪表板，包含两个以上的数据图表，一个时间组件；修改图表主题色；仪表板发布到菜单  BI名称：cxl测试BI</p></li><li><p><input checked="" disabled="" type="checkbox"> 1.使用自定义报表创建sys_user的报表1,具体自定义参数自定–&gt;将报表发布到报表管理菜单树下<br>2.使用sys_user新建报表2,在报表2中实现点击用户名,跳转到报表1中,并将该条数据的id传递到报表1中,实现报表1的刷新展示,并展示回退按钮,可以退回报表2中   报表名称：cxl练习报表2、cxl练习报表1</p></li><li><p><input checked="" disabled="" type="checkbox"> 1、使用动态表格行编辑和弹窗的方式实现用户数据的增删改查  2、使用excel数据导入功能导入仓库信息，以及仓库中的商品信息  仓库表单：cxl仓库信息</p></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 新平台 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>角色权限</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%96%B0%E5%B9%B3%E5%8F%B0/%E8%A7%92%E8%89%B2%E6%9D%83%E9%99%90/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%96%B0%E5%B9%B3%E5%8F%B0/%E8%A7%92%E8%89%B2%E6%9D%83%E9%99%90/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>菜单树添加对应的按钮权限，vue或低代码页面中的v-action</p></li><li><p>功能授权网络授予相应的按钮权限</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 新平台 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>新项目搭建</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%96%B0%E5%B9%B3%E5%8F%B0/%E6%96%B0%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%96%B0%E5%B9%B3%E5%8F%B0/%E6%96%B0%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/</url>
+      
+        <content type="html"><![CDATA[<h4 id="创建新平台项目流程"><a href="#创建新平台项目流程" class="headerlink" title="创建新平台项目流程"></a>创建新平台项目流程</h4><ol><li><p>使用<a href="http://172.16.0.97:5058/#/app/index">模块</a>的模块管理创建项目，安装<mark>全部</mark>模块并下载</p></li><li><p>解压后，使用idea打开项目，更改JDK以及Maven配置</p></li><li><p>修改<code>application-dev.properties</code>中的数据库等配置</p></li><li><p>此时，应该可以正常启动项目</p></li></ol><h4 id="业务模块配置"><a href="#业务模块配置" class="headerlink" title="业务模块配置"></a>业务模块配置</h4><ol><li><p>最外层pom增加mybatis依赖</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">           <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-spring<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li><li><p>使用<code>mybatis-generator-maven-plugin</code>1.3.7可以生成分页的mapper</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 新平台 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>路由</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E8%B7%AF%E7%94%B1/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E8%B7%AF%E7%94%B1/</url>
+      
+        <content type="html"><![CDATA[<h4 id="vue-router"><a href="#vue-router" class="headerlink" title="vue-router"></a>vue-router</h4><ol><li><p>使用vue.js+vue-router实现单页应用，<code>&lt;router-link&gt;</code>是一个组件，用于设置一个导航链接，切换不同的HTML内容，to属性为目标地址，即要显示的内容</p></li><li><pre><code class="html">&lt;p&gt;    &lt;router-link to=&quot;/form&quot;&gt;跳转到Form&lt;/router-link&gt;&lt;/p&gt;</code></pre></li></ol><h4 id="相关属性"><a href="#相关属性" class="headerlink" title="&lt;router-link&gt;相关属性"></a><code>&lt;router-link&gt;</code>相关属性</h4><ol><li><p><code>to</code>，表示目标路由的链接，当被点击后，内部会把to的值传到router.push()，该值可以是字符串或者描述目标位置的对象</p></li><li><p><code>replace</code>，设置replace属性，当点击时，会调用router.replace()而不是router.push()，导航后不会留下来history记录</p></li><li><p><code>append</code>，设置该属性后，会在当前(相对)路径前添加其路径，相当于String中的append(追加)</p></li><li><p><code>tag</code>，可以将<code>&lt;router-link&gt;</code>渲染成某种标签，例如<code>&lt;li&gt;</code>，貌似没什么用</p></li><li><p><code>active-calss</code>，设置链接激活时使用的CSS类名</p></li><li><p><code>event</code>生命可以用来触发导航的事件，可以是一个字符串或者时一个包含字符串的数组</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Harbor</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/docker/harbor_user_doc/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/docker/harbor_user_doc/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Harbor用户手册-仓库规范"><a href="#Harbor用户手册-仓库规范" class="headerlink" title="Harbor用户手册&amp;仓库规范"></a>Harbor用户手册&amp;仓库规范</h1><blockquote><p>author: liumingkun,<br>last_update: 2023&#x2F;12&#x2F;11</p></blockquote><h1 id="——————————————"><a href="#——————————————" class="headerlink" title="——————————————-"></a>——————————————-</h1><h3 id="前言：-harbor服务地址"><a href="#前言：-harbor服务地址" class="headerlink" title="前言： harbor服务地址"></a>前言： harbor服务地址</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">地址： http://172.16.0.190:8081</span><br><span class="line">测试用户名： test</span><br><span class="line">测试密码： Ggzn_1234</span><br><span class="line"></span><br><span class="line">test用户拥有common项目的访客(R)权限和test项目的开发(RW)权限</span><br><span class="line">如果需要获取更高权限，请联系管理员为你进行定制化用户创建和权限分配。</span><br></pre></td></tr></table></figure><h1 id="上篇：harbor仓库规范"><a href="#上篇：harbor仓库规范" class="headerlink" title="上篇：harbor仓库规范"></a>上篇：harbor仓库规范</h1><h3 id="TAG规范"><a href="#TAG规范" class="headerlink" title="TAG规范"></a>TAG规范</h3><ol><li>【重要】推送镜像必须要有REPOSITORY和TAG，否则harbor会在一段时间后把你的容器GC掉。</li><li>【重要】如果镜像需要GPU环境，必须在容器名上特别标注。否则一律认为是CPU版本。</li><li>【重要】latest标签应在最新版本完整测试无bug后，由功能验收者登录harbor进行手动添加或推送。</li><li>【推荐】每个项目可以根据自身情况自定义tag规则，要求见名知义即可。</li></ol><p>tag命令格式如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker tag 镜像ID  harbor地址/harbor项目名/容器名:标签文本</span><br></pre></td></tr></table></figure><p>列出几个示例，供大家参考。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">某天的逆向合成CPU版本</span><br><span class="line">$ docker tag 1f3f4ef7dc4d 172.16.0.190:8081/retro/retro_cpu:v20230714</span><br><span class="line">$ docker tag 1f3f4ef7dc4d 172.16.0.190:8081/retro/retro:v20230714</span><br><span class="line"></span><br><span class="line">分子图像识别GPU最新稳定版本</span><br><span class="line">$ docker tag 1f3f4ef7dc4d 172.16.0.190:8081/image_recognition/decimer-image-transformer-gpu:latest</span><br><span class="line"></span><br><span class="line">配置了ubuntu国内镜像源、conda国内源、pip国内源，基于 anaconda2020.2（py3.7.6）封装的墙内镜像</span><br><span class="line">$ docker tag ef74c1f34ddf 172.16.0.190:8081/common/anaconda:v2020.2.cn</span><br><span class="line"></span><br><span class="line">默认ubuntu官方源、conda官方源、pip官方源，基于 anaconda2020.2（py3.7.6）封装的墙外镜像</span><br><span class="line">$ docker tag 1f3f7ff4e7d  172.16.0.190:8081/common/anaconda:v2020.2.en</span><br></pre></td></tr></table></figure><h1 id="——————————————————————————"><a href="#——————————————————————————" class="headerlink" title="——————————————————————————-"></a>——————————————————————————-</h1><h1 id="下篇：用户手册"><a href="#下篇：用户手册" class="headerlink" title="下篇：用户手册"></a>下篇：用户手册</h1><h3 id="客户端的docker配置文件增加镜像仓库"><a href="#客户端的docker配置文件增加镜像仓库" class="headerlink" title="客户端的docker配置文件增加镜像仓库"></a>客户端的docker配置文件增加镜像仓库</h3><p>如果你配置了https，应该就可以像下边“registry-mirrors”中科大镜像那样配置。<br>由于docker默认不推荐使用非https方式推送镜像，所以在需要pull镜像时要加上harbor地址，<br>然后还要在“insecure-registries”配置无SSL证书的仓库（我们内网没法用域名也就不用去配置SSL）。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;registry-mirrors&quot;: [&quot;https://docker.mirrirs.ustc.edu.cn&quot;],</span><br><span class="line">    &quot;insecure-registries&quot;: [&quot;172.16.0.190:8081&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>重启docker</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl restart docker</span><br></pre></td></tr></table></figure><p>本地docker登录到harbor仓库</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">登录，交互式输密码</span><br><span class="line">$ docker login 172.16.0.190:8081</span><br><span class="line"></span><br><span class="line">或者 类似于mysql一样在命令行上输入密码</span><br><span class="line">$ docker login -uUSER -pPASSWORD 172.16.0.190:8081</span><br><span class="line"></span><br><span class="line">(base) jintaoyang@jellyfish:~$ docker login 172.16.0.190:8081</span><br><span class="line">Username: 你的用户名</span><br><span class="line">Password: 看不见的神秘字符串</span><br><span class="line"></span><br><span class="line">WARNING! Your password will be stored unencrypted in /home/jintaoyang/.docker/config.json.</span><br><span class="line">Configure a credential helper to remove this warning. See</span><br><span class="line">https://docs.docker.com/engine/reference/commandline/login/#credentials-store</span><br><span class="line"></span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure><blockquote><p>警告：docker将你的认证信息存放在 <code>/home/USERNAME/.docker/config.json</code><br>如果你的用户名或密码改了，把这个文件删掉重新进行 docker login 即可。</p></blockquote><h3 id="推送本地镜像到harbor"><a href="#推送本地镜像到harbor" class="headerlink" title="推送本地镜像到harbor"></a>推送本地镜像到harbor</h3><blockquote><p>注意：必须本地镜像必须要有tag，否则harbor会在一段时间后给你GC掉。</p></blockquote><p>【可选】你的镜像上需要有REPOSITORY和TAG，可以先用 <code>docker images</code> 查看。<br>如果<code>Dockerfile</code>没有指定-t参数，或者使用 <code>docker commit</code><br>构建镜像，就会在REPOSITORY和TAG处展示<code>&lt;NONE&gt;</code>。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker tag 镜像ID  harbor地址/harbor项目名/容器名:标签(通常用来标记版本号)</span><br><span class="line">$ docker tag 1f3f4ef7dc4d  172.16.0.190:8081/retro/retro_cpu:v20230714</span><br></pre></td></tr></table></figure><p>推送到harbor，完事以后可以在浏览器登录harbor看一下。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br><span class="line"></span><br><span class="line">$ docker push REPOSITORY:TAG</span><br><span class="line">$ docker push 172.16.0.190:8081/retro/retro_cpu:v20230714</span><br></pre></td></tr></table></figure><h3 id="从harbor上下载-拉取-私有镜像到本地docker"><a href="#从harbor上下载-拉取-私有镜像到本地docker" class="headerlink" title="从harbor上下载(拉取)私有镜像到本地docker"></a>从harbor上下载(拉取)私有镜像到本地docker</h3><p>拉取命令格式，有两种格式如下。推荐第一种。第二种命令拉取到本地的镜像是没有tag的，需要你自己设定。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">【推荐】命令格式1：</span><br><span class="line">$ docker pull harbor地址/harbor项目名/容器名:标签(一般都是版本号)</span><br><span class="line"></span><br><span class="line">命令格式2：</span><br><span class="line">$ docker pull harbor地址/harbor项目名/容器名@sha256签名:89492b84d3a51c7e67</span><br></pre></td></tr></table></figure><p>那么我们如何知道 docker pull 后面的一大串字符串是什么呢？步骤如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1、 登录harbor网页</span><br><span class="line">2、 左侧菜单点击&#x27;项目&#x27;</span><br><span class="line">3、 在项目列表中选择你想拉取的项目(比如retro)，进入项目镜像仓库</span><br><span class="line">4、 在镜像列表中可以看到不用的镜像名称，点击你想要的（比如：retro/retro_cpu）</span><br><span class="line">5.1、 在&#x27;retro/retro_cpu&#x27;镜像列表中，可以看到许许多多的历史版本，复制拉取命令到本地docker执行即可（此命令是上一小节中所说的第2种，如果你喜欢这种命令，那么久到此为止了。）</span><br><span class="line">5.2、 在&#x27;retro/retro_cpu&#x27;镜像列表中，可以看到许许多多的历史版本。根据tag选择你想要的镜像点进去，在tag列表中复制拉取命令到本地执行即可（此命令是上一小节中所说的第1种，拉取到本地的镜像包含tag）</span><br></pre></td></tr></table></figure><h3 id="如何从harbor上删除不想要的镜像呢？"><a href="#如何从harbor上删除不想要的镜像呢？" class="headerlink" title="如何从harbor上删除不想要的镜像呢？"></a>如何从harbor上删除不想要的镜像呢？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">首先在群里@你的项目管理员，然后让他登录harbor手动删除。（向上管理🥶）</span><br></pre></td></tr></table></figure><h3 id="登录harbor后如何从互联网拉取公共的镜像呢？"><a href="#登录harbor后如何从互联网拉取公共的镜像呢？" class="headerlink" title="登录harbor后如何从互联网拉取公共的镜像呢？"></a>登录harbor后如何从互联网拉取公共的镜像呢？</h3><p>前言</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当本地docker登录harbor后，当拉取DockerHub中的公开镜像(docker pull redis:7)时，</span><br><span class="line">实际上还是从harbor上拉取（代理dockerHub），而不走你之前配置的国内镜像源了。</span><br></pre></td></tr></table></figure><p>解决方案1（不推荐）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">在harbor上专门建立一个proxy项目用来代理163的镜像源，</span><br><span class="line">当我们需要DockerHub中的公开镜像(比如redis:7)时，从harbor的proxy项目上拉取即可。</span><br><span class="line">这样会消耗服务器流量。（不推荐，所以没有开启这个选项。）</span><br></pre></td></tr></table></figure><p>解决方案2（推荐）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">拉取镜像时在镜像前面加上代理地址，示例如下：</span><br><span class="line"></span><br><span class="line">常规镜像代理</span><br><span class="line">官方命令：docker pull stilleshan/frpc:latest</span><br><span class="line">代理命令：docker pull dockerproxy.com/stilleshan/frpc:latest</span><br><span class="line"></span><br><span class="line">根镜像代理</span><br><span class="line">官方命令：docker pull nginx:latest  </span><br><span class="line">官方命令：docker pull docker.io/library/ubuntu:22.04</span><br><span class="line">代理命令：docker pull dockerproxy.com/library/nginx:latest</span><br><span class="line">代理命令：docker pull dockerproxy.com/library/ubuntu:22.04</span><br></pre></td></tr></table></figure><h1 id="——————————————-1"><a href="#——————————————-1" class="headerlink" title="——————————————-"></a>——————————————-</h1><h1 id="番外篇：异常解决"><a href="#番外篇：异常解决" class="headerlink" title="番外篇：异常解决"></a>番外篇：异常解决</h1><p>Docker login 错误：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">现象：Error response from daemon: Get &quot;http://172.16.0.190:8081/v2/&quot;: Get &quot;http://172.16.0.97:8081/service/token?account=liumingkun&amp;client_id=docker&amp;offline_token=true&amp;service=harbor-registry&quot;: context deadline exceeded (Client.Timeout exceeded while awaiting headers)</span><br><span class="line">原因：</span><br><span class="line">1、可能忘记配置“insecure-registries”。</span><br><span class="line">2、harbor.yml文件的hostname配置项阻止了不正确的访问。</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>简介</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/JOOQ/jOOQ/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/JOOQ/jOOQ/</url>
+      
+        <content type="html"><![CDATA[<h3 id="jOOQ教程"><a href="#jOOQ教程" class="headerlink" title="jOOQ教程"></a>jOOQ教程</h3><ul><li>jOOQ的核心优势是可以将数据库表结构映射为Java类，包含表的基本描述和所有表字段。</li><li>生成的Java代码字段类型是根据数据库映射成的Java类型，在进行设置和查询操作时，因为是Java代码，都会有强类型校验，所以对于数据的输入，是天然安全的，极大的减少了<code>SQL注入</code>的风险</li></ul><h3 id="如何开始"><a href="#如何开始" class="headerlink" title="如何开始"></a>如何开始</h3><ul><li>创建&#x2F;更新 数据库表</li><li>通过jOOQ插件生成Java代码</li><li>进行业务逻辑开发</li></ul><h3 id="Maven配置"><a href="#Maven配置" class="headerlink" title="Maven配置"></a>Maven配置</h3><ul><li><p>jOOQ 提供了 Maven 插件 <code>jooq-codegen-maven</code>，通过配置可以进行代码生成操作，配置项主要是jdbc连接，目标数据库，表，以及生成的路径包名等</p></li><li><pre><code class="properties">&lt;properties&gt;    &lt;jooq.version&gt;3.12.3&lt;/jooq.version&gt;&lt;/properties&gt;&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;mysql&lt;/groupId&gt;        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;        &lt;version&gt;8.0.18&lt;/version&gt;    &lt;/dependency&gt;    &lt;!-- base jooq dependency --&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.jooq&lt;/groupId&gt;        &lt;artifactId&gt;jooq&lt;/artifactId&gt;        &lt;version&gt;$&#123;jooq.version&#125;&lt;/version&gt;    &lt;/dependency&gt;&lt;/dependencies&gt;&lt;build&gt;    &lt;plugins&gt;        &lt;plugin&gt;            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;            &lt;configuration&gt;                &lt;source&gt;1.8&lt;/source&gt;                &lt;target&gt;1.8&lt;/target&gt;            &lt;/configuration&gt;        &lt;/plugin&gt;        &lt;!-- 代码生成器插件 --&gt;        &lt;plugin&gt;            &lt;groupId&gt;org.jooq&lt;/groupId&gt;            &lt;artifactId&gt;jooq-codegen-maven&lt;/artifactId&gt;            &lt;version&gt;$&#123;jooq.version&#125;&lt;/version&gt;            &lt;configuration&gt;                &lt;jdbc&gt;                    &lt;driver&gt;com.mysql.cj.jdbc.Driver&lt;/driver&gt;                    &lt;url&gt;jdbc:mysql://127.0.0.1:3306/learn-jooq?serverTimezone=GMT%2B8&lt;/url&gt;                    &lt;user&gt;root&lt;/user&gt;                    &lt;password&gt;root&lt;/password&gt;                &lt;/jdbc&gt;                &lt;generator&gt;                    &lt;database&gt;                        &lt;includes&gt;s1_.*&lt;/includes&gt;                        &lt;inputSchema&gt;learn-jooq&lt;/inputSchema&gt;                    &lt;/database&gt;                    &lt;target&gt;                        &lt;packageName&gt;com.diamondfsd.jooq.learn.codegen&lt;/packageName&gt;                        &lt;directory&gt;/src/main/java&lt;/directory&gt;                    &lt;/target&gt;                &lt;/generator&gt;            &lt;/configuration&gt;        &lt;/plugin&gt;    &lt;/plugins&gt;&lt;/build&gt;<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 代码生成</span><br><span class="line"></span><br><span class="line">- ```shell</span><br><span class="line">  #通过此命令里可以调用 jooq-codegen-maven 插件进行代码生成</span><br><span class="line">  mvn jooq-codegen:generate</span><br></pre></td></tr></table></figure></code></pre></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> jooq </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>修改镜像</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/docker/%E4%BF%AE%E6%94%B9%E9%95%9C%E5%83%8F%E6%BA%90/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/docker/%E4%BF%AE%E6%94%B9%E9%95%9C%E5%83%8F%E6%BA%90/</url>
+      
+        <content type="html"><![CDATA[<p>默认docker源在国外，下载镜像速度非常慢，更改为国内源速度快很多。</p><h1 id="创建或修改-etc-docker-daemon-json-文件，修改为如下形式"><a href="#创建或修改-etc-docker-daemon-json-文件，修改为如下形式" class="headerlink" title="创建或修改 &#x2F;etc&#x2F;docker&#x2F;daemon.json 文件，修改为如下形式"></a>创建或修改 &#x2F;etc&#x2F;docker&#x2F;daemon.json 文件，修改为如下形式</h1><p><code>&#123;   &quot;registry-mirrors&quot; : [   &quot;[https://docker.mirrors.ustc.edu.cn&quot;](https://docker.mirrors.ustc.edu.cn&quot;/),   &quot;[https://yxzrazem.mirror.aliyuncs.com&quot;](https://yxzrazem.mirror.aliyuncs.com&quot;/),   &quot;[http://hub-mirror.c.163.com&quot;]](http://hub-mirror.c.163.com&quot;]/)   &#125;</code></p><h1 id="重启docker服务使配置生效"><a href="#重启docker服务使配置生效" class="headerlink" title="重启docker服务使配置生效"></a>重启docker服务使配置生效</h1><p>sudo systemctl daemon-reload<br>systemctl restart docker.service</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>安装</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/docker/%E5%AE%89%E8%A3%85docker/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/docker/%E5%AE%89%E8%A3%85docker/</url>
+      
+        <content type="html"><![CDATA[<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h3 id="在-Ubuntu-22-04-上安装-Docker"><a href="#在-Ubuntu-22-04-上安装-Docker" class="headerlink" title="在 Ubuntu 22.04 上安装 Docker"></a>在 Ubuntu 22.04 上安装 Docker</h3><p><strong>步骤 1：更新系统</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure><p><strong>步骤 2：安装 Docker 依赖项</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure><p><strong>步骤 3：添加 Docker 官方 GPG 密钥</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure><p><strong>步骤 4：添加 Docker 存储库</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list</span><br></pre></td></tr></table></figure><p><strong>步骤 5：更新系统</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure><p><strong>步骤 6：安装 Docker 引擎</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install docker-ce</span><br></pre></td></tr></table></figure><p><strong>步骤 7：验证 Docker 是否已安装</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker --version</span><br></pre></td></tr></table></figure><p><strong>输出结果:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Docker version 20.10.14, build e22a77e</span><br></pre></td></tr></table></figure><p><strong>步骤 8：设置 Docker 用户组</strong></p><p><strong>将您的用户添加到 docker 用户组，以便无需 sudo 即可运行 Docker 命令:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker $USER</span><br></pre></td></tr></table></figure><p><strong>注销并重新登录后，您就可以无需 sudo 即可运行 Docker 命令。</strong></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>栅格布局</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/AntDesign/%E6%A0%85%E6%A0%BC%E5%B8%83%E5%B1%80/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/AntDesign/%E6%A0%85%E6%A0%BC%E5%B8%83%E5%B1%80/</url>
+      
+        <content type="html"><![CDATA[<h4 id="Grid布局"><a href="#Grid布局" class="headerlink" title="Grid布局"></a>Grid布局</h4><ol><li><p>基于行(row)和列(col)来定义信息区块的外部框架</p><ol><li><p>通过<code>row</code>在水平方向建立一组<code>column</code></p></li><li><p>自己的内容应当放置在<code>col</code>内，只有<code>col</code>可以作为<code>row</code>的直接元素</p></li><li><p>栅格系统中的列是指1到24的值来表示其跨越的范围</p></li><li><p>若一个<code>row</code>中的<code>col</code>总和超过24，则多余的<code>col</code>会作为一个整体另起一行排列</p></li></ol></li><li><p>区块间隔<code>gutter</code>，可以使用<code>&lt;a-row :gutter=&quot;16&quot;&gt;</code></p></li><li><p>左右偏移<code>offset</code>，<code>&lt;a-col :span=&quot;12&quot; :offset=&quot;6&quot;&gt;</code></p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> AntDesign </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Layout布局</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/AntDesign/Layout%E5%B8%83%E5%B1%80/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/AntDesign/Layout%E5%B8%83%E5%B1%80/</url>
+      
+        <content type="html"><![CDATA[<h2 id="组件概述"><a href="#组件概述" class="headerlink" title="组件概述"></a>组件概述</h2><ul><li><code>Layout</code>：布局容器，其下可嵌套 <code>Header</code> <code>Sider</code> <code>Content</code> <code>Footer</code> 或 <code>Layout</code> 本身，可以放在任何父容器中。</li><li><code>Header</code>：顶部布局，自带默认样式，其下可嵌套任何元素，只能放在 <code>Layout</code> 中。</li><li><code>Sider</code>：侧边栏，自带默认样式及基本功能，其下可嵌套任何元素，只能放在 <code>Layout</code> 中。</li><li><code>Content</code>：内容部分，自带默认样式，其下可嵌套任何元素，只能放在 <code>Layout</code> 中。</li><li><code>Footer</code>：底部布局，自带默认样式，其下可嵌套任何元素，只能放在 <code>Layout</code> 中。</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> AntDesign </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>项目导入jooq</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/JOOQ/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/JOOQ/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h4 id="SpringBoot项目导入jooq"><a href="#SpringBoot项目导入jooq" class="headerlink" title="SpringBoot项目导入jooq"></a>SpringBoot项目导入jooq</h4><ol><li><p>在业务模块的<code>pom</code>文件中引入依赖</p><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&lt;dependency&gt;</span></span><br><span class="line">            <span class="attr">&lt;groupId&gt;org.jooq&lt;/groupId&gt;</span></span><br><span class="line">            <span class="attr">&lt;artifactId&gt;jooq&lt;/artifactId&gt;</span></span><br><span class="line">            <span class="attr">&lt;version&gt;$&#123;jooq.version&#125;&lt;/version&gt;</span></span><br><span class="line"><span class="attr">&lt;/dependency&gt;</span></span><br></pre></td></tr></table></figure></li><li><p>引入<code>jooq-gen</code><img title="" src="../../../assets/2024-02-20-16-24-23-image.png" alt="" data-align="left" width="277"></p></li><li><p>修改<code>library.xml</code>中的配置，主要是<code>jdbc</code>的配置和文件生成位置</p></li><li><p>在终端中运行<code>win-generate.bat</code>生成相关文件</p></li></ol><h4 id="配置JooqConfig"><a href="#配置JooqConfig" class="headerlink" title="配置JooqConfig"></a>配置JooqConfig</h4><ol><li><p>首先要确保dataSource配置正确</p></li><li><p>然后新建JooqConfig类，并使用<code>@Configuration</code>注解</p></li><li><p>注意在Config类中注册bean时，name字段决定了自动装配的bean名称</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*DSLContext for rppm */</span></span><br><span class="line">        <span class="meta">@Bean(name = &quot;dslRppm&quot;)</span></span><br><span class="line">        <span class="keyword">public</span> DefaultDSLContext <span class="title function_">dslContext</span><span class="params">(<span class="meta">@Qualifier(&quot;dataSourceConnectionProviderRppm&quot;)</span> DataSourceConnectionProvider connectionProviderRppm,</span></span><br><span class="line"><span class="params">                                             <span class="meta">@Qualifier(&quot;transactionProviderRppm&quot;)</span> SpringTransactionProvider transactionProviderRppm)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DefaultDSLContext</span>(configuration(connectionProviderRppm, transactionProviderRppm));</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></li></ol><p>例如，使用<code>@Resource  private DSLContext dslRppm;</code>进行装配时会去查找名称为<code>dslRppm</code>的bean，即自己配置的<code>DSLContext</code></p><ol start="4"><li>具体的JooqConfig类，可以去standard-server中查看</li></ol><h4 id="在业务方法中使用jooq进行查询"><a href="#在业务方法中使用jooq进行查询" class="headerlink" title="在业务方法中使用jooq进行查询"></a>在业务方法中使用jooq进行查询</h4><ol><li><p>注入依赖<code>@Resource  private DSLContext dslRppm;</code>会根据上面的配置的bean的名称进行自动装配</p></li><li><p>查询语句示例</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Result&lt;Record&gt; result = dslRppm</span><br><span class="line">                .select()</span><br><span class="line">                .from(STUDENT_TABLE)</span><br><span class="line">                .fetch();  </span><br><span class="line">result.forEach(res -&gt; &#123;</span><br><span class="line">            Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            <span class="type">String</span> <span class="variable">id</span> <span class="operator">=</span> res.getValue(STUDENT_TABLE.ID);</span><br><span class="line">            map.put(<span class="string">&quot;id&quot;</span>, id);</span><br><span class="line">            <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> res.getValue(STUDENT_TABLE.NAME);</span><br><span class="line">            map.put(<span class="string">&quot;name&quot;</span>, name);</span><br><span class="line">            <span class="type">Integer</span> <span class="variable">age</span> <span class="operator">=</span> res.getValue(STUDENT_TABLE.AGE);</span><br><span class="line">            map.put(<span class="string">&quot;age&quot;</span>, age);</span><br><span class="line">            list.add(map);</span><br><span class="line">        &#125;);</span><br><span class="line"> Result&lt;StudentTableRecord&gt; studentTableRecords = result.into(STUDENT_TABLE);</span><br><span class="line">        studentTableRecords.forEach(studentTableRecord -&gt; &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">id</span> <span class="operator">=</span> studentTableRecord.getId();</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure></li><li><p>上述语句会查询student_table表中的所有数据，并保存在Result中，其继承了List类，可以当成List使用；也可以使用<code>.into()</code>方法，将默认Record对象，转换为表的Record对象，直接调用getter&#x2F;setter</p></li><li><p>fetchInto方法可以可以传入任意class类型，或者表常量</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> jooq </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>事务</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Spring/%E4%BA%8B%E5%8A%A1/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Spring/%E4%BA%8B%E5%8A%A1/</url>
+      
+        <content type="html"><![CDATA[<p>1）默认配置下 Spring 只会回滚运行时异常（非受检查异常），即继承自 RuntimeException 的异常或者 Error。（<a href="https://docs.spring.io/spring/docs/4.3.13.RELEASE/spring-framework-reference/htmlsingle/#transaction-declarative-rolling-back" title="官网">官网</a>）</p><p>2）@Transactional 注解只能应用到 public 修饰的方法。（<a href="https://docs.spring.io/spring/docs/4.3.13.RELEASE/spring-framework-reference/htmlsingle/#transaction-declarative-annotations" title="官网">官网</a>）</p><h4 id="几个常见的事务失效场景"><a href="#几个常见的事务失效场景" class="headerlink" title="几个常见的事务失效场景"></a>几个常见的事务失效场景</h4><ol><li><p> @Transactional 应用在非 public 修饰的方法上</p></li><li><p>@Transactional 注解回滚异常属性 rollbackFor 设置错误</p></li><li><p>@Transactional 注解传播属性 propagation 设置错误</p></li><li><p>同类中内部方法相互调用，默认代理模式下，如果调用者自己已经有事务，则被调用的永远和它处于同一事务。被调用者的设置的 REQUIRES_NEW、NOT_SUPPORTED、NEVER 等等都不会有效，</p></li><li><p>同类中内部方法相互调用，调用者方法自己没有事务，自己也未加 @Transactionl，此时被调用方法上面即使加了 @Transaction，事务也不会生效。因为此时它不是使用的代理方式调用的，而是 this.xx调用的。</p></li><li><p>异常被 catch 捕获，没有继续往外抛，导致 @Transactional 失效</p></li><li><p>数据库存储引擎不支持事务导致失效</p></li><li><p>抛出的异常不正确，默认只回滚 RuntimeException(运行时异常)和 Error(错误)</p></li><li><p>多线程影响</p></li><li><p>事务方法被final、static修饰</p></li><li><p>当前类没有被Spring管理</p></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> spring </tag>
             
         </tags>
       
@@ -24,8 +746,8 @@
     
     <entry>
       <title>与ES交互</title>
-      <link href="/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/"/>
-      <url>/2024/03/26/%E4%B8%8EES%E4%BA%A4%E4%BA%92/</url>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Elasticsearch/%E4%B8%8EES%E4%BA%A4%E4%BA%92/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Elasticsearch/%E4%B8%8EES%E4%BA%A4%E4%BA%92/</url>
       
         <content type="html"><![CDATA[<p>目前与 elasticsearch 交互主要有两种方式：Client API 和 RESTful API。</p><h3 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h3><p>Elasticsearch 是面向文档的，意味着它存储整个对象或文档。Elasticsearch 不仅存储文档，而且 每个文档的内容可以被检索。在 Elasticsearch 中，你对文档进行索引、检索、排序和过滤而不是对行列数据。这是一种完全不同的思考数据的方式，也是 Elasticsearch 能支持复杂全文检索的原因。</p><h3 id="索引的应用"><a href="#索引的应用" class="headerlink" title="索引的应用"></a>索引的应用</h3><p>查看我们的所有索引信息：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET _search</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;query&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;match_all&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><p>查看索引</p><p>curl -XGET “<a href="http://localhost:9200/_cat/indices?v">http://localhost:9200/_cat/indices?v</a>“ -u elastic:6NrG3wS4vF9iGPYrd1uQ</p><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PUT /my-index</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;mappings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="comment">//映射规则</span></span><br><span class="line">    <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span>    <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;integer&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span>  </span><br><span class="line">      <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span>  <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;keyword&quot;</span>  <span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="comment">//keyword不会进行全文检索 </span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span>   <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span>  <span class="punctuation">&#125;</span><span class="comment">//text保存的时候进行分词，搜索的时候进行全文检索   </span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><p>创建索引后 添加新的字段映射</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PUT /my-index/_mapping</span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;employee-id&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;keyword&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;index&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="comment">//索引选项控制是否对字段值建立索引。 它接受true或false，默认为true。未索引的字段不可查询。</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
       
@@ -33,7 +755,83 @@
       
         <tags>
             
-            <tag> es </tag>
+            <tag> ES </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>简介</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Elasticsearch/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Elasticsearch/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
+      
+        <content type="html"><![CDATA[<p><code>Elasticsearch是一个近乎实时（NRT）的搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。通常有集群，节点，分片，副本等概念。</code></p><h3 id="集群-cluster"><a href="#集群-cluster" class="headerlink" title="集群(cluster)"></a>集群(cluster)</h3><p>集群(cluster)是一组具有相同<code>cluster.name</code>的节点集合，他们协同工作，共享数据并提供故障转移和扩展功能，当然一个节点也可以组成一个集群。</p><p>集群由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入集群的话，则该节点只能是集群的一部分。</p><p><strong>【集群健康状态】</strong></p><blockquote><p>集群状态通过 <strong>绿</strong>，<strong>黄</strong>，<strong>红</strong> 来标识</p><ul><li><strong>绿色</strong> - 一切都很好（集群功能齐全）。</li><li><strong>黄色</strong> - 所有数据均可用，但尚未分配一些副本（集群功能齐全）。</li><li><strong>红色</strong> - 某些数据由于某种原因不可用（集群部分功能）</li></ul></blockquote><p>要检查群集运行状况，我们可以在 Kibana 控制台中运行以下命令<code>GET /_cluster/health</code>，得到如下信息：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;cluster_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;elasticsearch&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;yellow&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;timed_out&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_nodes&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_data_nodes&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_primary_shards&quot;</span><span class="punctuation">:</span> <span class="number">28</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_shards&quot;</span><span class="punctuation">:</span> <span class="number">28</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;relocating_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;initializing_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;unassigned_shards&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;delayed_unassigned_shards&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_pending_tasks&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;number_of_in_flight_fetch&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;task_max_waiting_in_queue_millis&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;active_shards_percent_as_number&quot;</span><span class="punctuation">:</span> <span class="number">84.84848484848484</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><h2 id="节点-Node"><a href="#节点-Node" class="headerlink" title="节点(Node)"></a>节点(Node)</h2><p>节点，一个运行的 ES 实例就是一个节点，节点存储数据并参与集群的索引和搜索功能。</p><p>就像集群一样，节点由名称标识，默认情况下，该名称是在启动时分配给节点的随机通用唯一标识符（UUID）。如果不需要默认值，可以定义所需的任何节点名称。此名称对于管理目的非常重要，您可以在其中识别网络中哪些服务器与 Elasticsearch 集群中的哪些节点相对应。</p><p>可以将节点配置为按集群名称加入特定集群。默认情况下，每个节点都设置为加入一个名为 cluster 的 elasticsearch 集群，这意味着如果您在网络上启动了许多节点并且假设它们可以相互发现 - 它们将自动形成并加入一个名为 elasticsearch 的集群。</p><h2 id="索引（Index）"><a href="#索引（Index）" class="headerlink" title="索引（Index）"></a>索引（Index）</h2><p>索引是具有某些类似特征的文档集合。例如，您可以拥有店铺数据的索引，商品的一个索引以及订单数据的一个索引。</p><p>索引由名称标识（必须全部小写），此名称用于在对其中的文档执行索引，搜索，更新和删除操作时引用索引。</p><h2 id="类型（Type）"><a href="#类型（Type）" class="headerlink" title="类型（Type）"></a>类型（Type）</h2><p>类型，曾经是索引的逻辑类别&#x2F;分区，允许您在同一索引中存储不同类型的文档，例如，一种类型用于用户，另一种类型用于博客帖子。</p><blockquote><p><strong>在 6.0.0 中弃用，以后将不再可能在索引中创建多个类型，并且将在更高版本中删除类型的整个概念</strong>。</p></blockquote><h2 id="文档（Document）"><a href="#文档（Document）" class="headerlink" title="文档（Document）"></a>文档（Document）</h2><p>文档是可以建立索引的基本信息单元。例如，您可以为单个客户提供文档，为单个产品提供一个文档，为单个订单提供一个文档。该文档以JSON（JavaScript Object Notation）表示，JSON是一种普遍存在的互联网数据交换格式。</p><p>在索引&#x2F;类型中，您可以根据需要存储任意数量的文档。请注意，尽管文档实际上驻留在索引中，但实际上必须将文档编入索引&#x2F;分配给索引中的类型。</p><h2 id="分片-Shards"><a href="#分片-Shards" class="headerlink" title="分片(Shards)"></a>分片(Shards)</h2><p>索引可能存储大量可能超过单个节点的硬件限制的数据。例如，占用1TB磁盘空间的十亿个文档的单个索引可能不适合单个节点的磁盘，或者可能太慢而无法单独从单个节点提供搜索请求。</p><p>为了解决这个问题，Elasticsearch 提供了将索引细分为多个称为分片的功能。创建索引时，只需定义所需的分片数即可。每个分片本身都是一个功能齐全且独立的“索引”，可以托管在集群中的任何节点上。</p><p>设置分片的目的及原因主要是：</p><ul><li>它允许您水平拆分&#x2F;缩放内容量</li><li>它允许您跨分片（可能在多个节点上）分布和并行化操作，从而提高性能&#x2F;吞吐量</li></ul><p>分片的分布方式以及如何将其文档聚合回搜索请求的机制完全由 Elasticsearch 管理，对用户而言是透明的。</p><p>在可能随时发生故障的网络&#x2F;云环境中，分片非常有用，建议使用故障转移机制，以防分片&#x2F;节点以某种方式脱机或因任何原因消失。为此，Elasticsearch 允许您将索引的分片的一个或多个副本制作成所谓的副本分片或简称副本。</p><h2 id="副本-Replicasedit"><a href="#副本-Replicasedit" class="headerlink" title="副本(Replicasedit)"></a>副本(Replicasedit)</h2><p>副本，是对分片的复制。目的是为了当分片&#x2F;节点发生故障时提供高可用性，它允许您扩展搜索量&#x2F;吞吐量，因为可以在所有副本上并行执行搜索。</p><p>总而言之，每个索引可以拆分为多个分片。索引也可以复制为零次（表示没有副本）或更多次。复制之后，每个索引将具有主分片(从原始分片复制而来的)和复制分片(主分片的副本)。</p><p>可以在创建索引时为每个索引定义分片和副本的数量。创建索引后，您也可以随时动态更改副本数。您可以使用<code>_shrink</code> 和 <code>_splitAPI</code> 更改现有索引的分片数，但这不是一项轻松的任务，所以预先计划正确数量的分片是最佳方法。</p><p>默认情况下，Elasticsearch 中的每个索引都分配了5个主分片和1个副本，这意味着如果集群中至少有两个节点，则索引将包含5个主分片和另外5个副本分片（1个完整副本），总计为每个索引10个分片。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>我们假设有一个集群由三个节点组成(Node1 , Node2 , Node3)。 它有两个主分片(P0 , P1)，每个主分片有两个副本分片(R0 , R1)。相同分片的副本不会放在同一节点，所以我们的集群看起来如下图所示 “有三个节点和一个索引的集群”。</p><p><img src="https://img2018.cnblogs.com/blog/1162587/201811/1162587-20181106221534193-554135498.png"></p><p>对比图来类比传统关系型数据库：</p><blockquote><ul><li>关系型数据库 -&gt; Databases(库) -&gt; Tables(表) -&gt; Rows(行) -&gt; Columns(列)。</li><li>Elasticsearch -&gt; Indeces(索引) -&gt; Types(类型) -&gt; Documents(文档) -&gt; Fields(属性)。</li></ul></blockquote>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> ES </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>低代码嵌入</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E6%96%B0%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3/k-form-build/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E6%96%B0%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3/k-form-build/</url>
+      
+        <content type="html"><![CDATA[<h4 id="在vue中嵌入低代码组件"><a href="#在vue中嵌入低代码组件" class="headerlink" title="在vue中嵌入低代码组件"></a>在vue中嵌入低代码组件</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;k-form-build ref=<span class="string">&#x27;student&#x27;</span></span><br><span class="line">                  :value=<span class="string">&quot;jsonData&quot;</span></span><br><span class="line">                  :parameterValue=<span class="string">&quot;parametersValue&quot;</span></span><br><span class="line">                  :disabled=<span class="string">&quot;currentDisable&quot;</span> /&gt;</span><br></pre></td></tr></table></figure><p><code>jsonData</code>是低代码组件的json配置，使用<code>/inner/api/view/kform/get</code>这个接口进行获取</p><p>想要低代码组件渲染的数据置于<code>parametersVal</code>中</p><h4 id="完整的vue代码如下"><a href="#完整的vue代码如下" class="headerlink" title="完整的vue代码如下"></a>完整的vue代码如下</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>node版本</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/Yarn/node%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/Yarn/node%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<p>问题描述：</p><p><code>1. 拉取平台代码后，使用yarn install命令安装依赖，当前的node版本为16.17.0，但是报错</code></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">error commander@<span class="number">12.0</span><span class="number">.0</span>: <span class="title class_">The</span> engine <span class="string">&quot;node&quot;</span> is incompatible <span class="keyword">with</span> <span class="variable language_">this</span> <span class="variable language_">module</span>.</span><br><span class="line"> <span class="title class_">Expected</span> version <span class="string">&quot;&gt;=18&quot;</span>. <span class="title class_">Got</span> <span class="string">&quot;16.17.0&quot;</span></span><br><span class="line">error <span class="title class_">Found</span> incompatible <span class="variable language_">module</span>.</span><br></pre></td></tr></table></figure><p><code>2. 尝试升级node版本为18.12.0后，再次执行yarn install，发现出现了新的报错</code></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error @achrinza/node-ipc@<span class="number">9.2</span><span class="number">.2</span>: <span class="title class_">The</span> engine <span class="string">&quot;node&quot;</span> is incompatible <span class="keyword">with</span> <span class="variable language_">this</span> <span class="variable language_">module</span>.</span><br><span class="line"> <span class="title class_">Expected</span> version <span class="string">&quot;8 || 10 || 12 || 14 || 16 || 17&quot;</span>. <span class="title class_">Got</span> <span class="string">&quot;18.12.0&quot;</span></span><br></pre></td></tr></table></figure><p><code>3. 综上两点错误，说明升级node版本并不能解决问题，google该问题以求解决方案</code></p><p>解决方案：</p><p><code>使用 yarn config set ignore-engines true 命令来解决部分模块版本不兼容问题，然后使用yarn install --force命令安装相关依赖</code></p><p><mark>yarn config set ignore-engines true</mark></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> yarn </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>模板引导</title>
+      <link href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E6%96%B0%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3/%E9%A1%B5%E9%9D%A2%E8%AE%BE%E8%AE%A1/%E6%A8%A1%E6%9D%BF%E5%BC%95%E5%AF%BC/"/>
+      <url>/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Vue/%E6%96%B0%E5%B9%B3%E5%8F%B0%E7%9B%B8%E5%85%B3/%E9%A1%B5%E9%9D%A2%E8%AE%BE%E8%AE%A1/%E6%A8%A1%E6%9D%BF%E5%BC%95%E5%AF%BC/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>点击页面设计-新增表单，选择空白模板，此时页面会跳转到’&#x2F;guide&#x2F;index’</p></li><li><p>在前端项目中找到’&#x2F;guide&#x2F;index.vue’，该页面使用<code>&lt;a-card</code>卡片布局包裹了多个子组件，这里只关注<code>&lt;blank&gt;</code>组件，父组件将<code>initialData</code>传递给子组件</p></li><li><p>进入<code>blank</code>组件,观察其核心代码,其中<code>&lt;a-col span=&quot;19&quot;&gt;</code>的span表示占用该行中24份的19份，即调整宽度</p></li></ol><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;a-row&gt;</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">a-col</span> <span class="attr">span</span>=<span class="string">&quot;5&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">a-steps</span> <span class="attr">v-model</span>=<span class="string">&quot;current&quot;</span> <span class="attr">direction</span>=<span class="string">&quot;vertical&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">a-step</span> <span class="attr">v-for</span>=<span class="string">&quot;item in steps&quot;</span> <span class="attr">class</span>=<span class="string">&quot;ant-steps-item&quot;</span> <span class="attr">:disabled</span>=<span class="string">&quot;true&quot;</span> <span class="attr">:key</span>=<span class="string">&quot;item.title&quot;</span> <span class="attr">:title</span>=<span class="string">&quot;item.title&quot;</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">a-steps</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">a-col</span>&gt;</span></span></span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">a-col</span> <span class="attr">span</span>=<span class="string">&quot;19&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">tab-name-conf</span> <span class="attr">:form-name</span>=<span class="string">&quot;kFormName&quot;</span> <span class="attr">v-if</span>=<span class="string">&quot;current === 0 &quot;</span> <span class="attr">ref</span>=<span class="string">&quot;tableName&quot;</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">layout-style-conf</span> <span class="attr">:dataJson</span>=<span class="string">&quot;initialData&quot;</span> <span class="attr">:form-name</span>=<span class="string">&quot;kFormName&quot;</span> <span class="attr">v-if</span>=<span class="string">&quot;current === 1&quot;</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">a-col</span>&gt;</span></span></span><br><span class="line">    &lt;/a-row&gt;</span><br></pre></td></tr></table></figure><ol start="4"><li>因为当前的current值为0，所以显示<code>&lt;tab-name-conf&gt;</code>子组件，用于输入表单名称</li><li>点击<code>下一步</code>会调用<code>next</code>方法，进而使<code>current</code>值加1</li><li>此时会显示<code>&lt;layout-style-conf&gt;</code>子组件，该组件在<code>created()</code>函数中掉用了<code>save()</code>方法，进而调用后端的保存接口对<code>Kform</code>页面进行保存，并返回了<code>kFormId</code>，然后调用<code>jumpKFormEdit</code>方法，跳转到<code>/kform/list</code></li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue </tag>
             
         </tags>
       

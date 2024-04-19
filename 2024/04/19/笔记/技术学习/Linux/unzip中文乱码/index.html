@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>unzip中文乱码 | Monster龙</title><meta name="author" content="CXL"><meta name="copyright" content="CXL"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="在 Linux 中解压中文文件名压缩包时出现乱码，是因为 unzip 命令默认使用系统的本地编码来解压，而 Windows 下生成的 zip 文件中的编码是 GBK&#x2F;GB2312 等，导致这些 zip 文件在 Linux 下解压时出现乱码问题。 解决方法:  使用 -O 选项指定编码:  1unzip -O CP936 xxx.zip  该命令将使用 GBK&#x2F;GB2312 编码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unzip中文乱码">
+<meta property="og:url" content="http://monster295.github.io/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/index.html">
+<meta property="og:site_name" content="Monster龙">
+<meta property="og:description" content="在 Linux 中解压中文文件名压缩包时出现乱码，是因为 unzip 命令默认使用系统的本地编码来解压，而 Windows 下生成的 zip 文件中的编码是 GBK&#x2F;GB2312 等，导致这些 zip 文件在 Linux 下解压时出现乱码问题。 解决方法:  使用 -O 选项指定编码:  1unzip -O CP936 xxx.zip  该命令将使用 GBK&#x2F;GB2312 编码">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://monster295.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2024-04-19T15:18:41.000Z">
+<meta property="article:modified_time" content="2024-04-19T03:12:05.218Z">
+<meta property="article:author" content="CXL">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://monster295.github.io/img/avatar.jpg"><link rel="shortcut icon" href="/img/title.jpg"><link rel="canonical" href="http://monster295.github.io/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'unzip中文乱码',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-04-19 11:12:05'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">45</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Monster龙"><img class="site-icon" src="/img/title.jpg"/><span class="site-name">Monster龙</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">unzip中文乱码</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-19T03:12:05.218Z" title="更新于 2024-04-19 11:12:05">2024-04-19</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>在 Linux 中解压中文文件名压缩包时出现乱码，是因为 unzip 命令默认使用系统的本地编码来解压，而 Windows 下生成的 zip 文件中的编码是 GBK&#x2F;GB2312 等，导致这些 zip 文件在 Linux 下解压时出现乱码问题。</p>
+<p><strong>解决方法:</strong></p>
+<ol>
+<li><strong>使用 -O 选项指定编码:</strong></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -O CP936 xxx.zip</span><br></pre></td></tr></table></figure>
+
+<p>该命令将使用 GBK&#x2F;GB2312 编码来解压 xxx.zip 文件。</p>
+<ol start="2">
+<li><strong>使用 unar 命令:</strong></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unar xxx.zip</span><br></pre></td></tr></table></figure>
+
+<p>unar 命令支持自动识别编码，可以正确解压中文文件名压缩包。</p>
+<ol start="3">
+<li><strong>安装 unzip-iconv:</strong></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install unzip-iconv</span><br></pre></td></tr></table></figure>
+
+<p>安装 unzip-iconv 后，就可以使用 -O 选项来指定编码了。</p>
+<ol start="4">
+<li><strong>使用其他解压工具:</strong></li>
+</ol>
+<ul>
+<li>7-Zip</li>
+<li>PeaZip</li>
+<li>File Roller</li>
+</ul>
+<p>这些解压工具都支持自动识别编码，可以正确解压中文文件名压缩包。</p>
+<p>在 Ubuntu 系统中，可以使用 <code>unzip</code> 命令解压 zip 文件到指定路径。</p>
+<p><strong>基本语法:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip [-c][-d directory][-n][-t][-v] zipfile</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明:</strong></p>
+<ul>
+<li><code>-c</code>：将解压缩的结果显示到屏幕上，并对字符做适当的转换。</li>
+<li><code>-d directory</code>：指定解压缩后的文件存放目录。</li>
+<li><code>-n</code>：更新现有的文件。</li>
+<li><code>-t</code>：检查压缩文件是否正确，但不解压。</li>
+<li><code>-v</code>：显示详细的信息。</li>
+<li><code>zipfile</code>：要解压缩的 zip 文件。</li>
+</ul>
+<p><strong>解压到指定路径的示例:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -d /path/to/target/directory zipfile.zip</span><br></pre></td></tr></table></figure>
+
+<p><strong>例如，要将 <code>myfile.zip</code> 解压缩到 <code>/home/user/data</code> 目录下，可以使用以下命令:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -d /home/user/data myfile.zip</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong></p>
+<ul>
+<li>如果要解压缩的 zip 文件名包含空格，则需要使用引号将文件名括起来。</li>
+<li>如果目标目录不存在，则 <code>unzip</code> 命令会自动创建它。</li>
+<li>如果目标目录中存在同名文件，则 <code>unzip</code> 命令会询问是否覆盖现有的文件。</li>
+</ul>
+<p><strong>其他用法:</strong></p>
+<ul>
+<li><strong>解压并显示内容:</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -c zipfile.zip</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>检查压缩文件是否正确:</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -t zipfile.zip</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>显示详细解压信息:</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -v zipfile.zip</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://monster295.github.io">CXL</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://monster295.github.io/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/">http://monster295.github.io/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/unzip%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://monster295.github.io" target="_blank">Monster龙</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="常用命令"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">常用命令</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Java/Collections/" title="Collections"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Collections</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/Nginx%E5%91%BD%E4%BB%A4/" title="nginx命令"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">nginx命令</div></div></a></div><div><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="常用命令"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">常用命令</div></div></a></div><div><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/chmod/" title="chmod"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">chmod</div></div></a></div><div><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E6%8C%82%E8%BD%BDWindows%E6%96%87%E4%BB%B6/" title="挂载Windows文件"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">挂载Windows文件</div></div></a></div><div><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E5%8E%BB%E6%8E%89777%E7%9A%84%E8%83%8C%E6%99%AF/" title="777背景"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">777背景</div></div></a></div><div><a href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Linux/%E6%96%B0%E5%A2%9Eroot%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81/" title="新增root密码"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">新增root密码</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">CXL</div><div class="author-info__description">记录点滴生活</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">45</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Monster295"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">CXL Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Callout/" title="Callout">Callout</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/Process/" title="Process">Process</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/idea%E5%BF%AB%E6%8D%B7%E9%94%AE/" title="idea快捷键">idea快捷键</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/" title="接口开发规范">接口开发规范</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E7%AC%94%E8%AE%B0/%E8%A7%84%E8%8C%83%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE/%E5%B9%B3%E5%8F%B0/" title="平台">平台</a><time datetime="2024-04-19T15:18:41.000Z" title="发表于 2024-04-19 23:18:41">2024-04-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/bg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By CXL</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="false"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
